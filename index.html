@@ -799,10 +799,12 @@ function statusBadge(status) {
 // ══════════════════════════════════════════
 //   EXPLORE
 // ══════════════════════════════════════════
-const ALL_SKILLS = [...new Set(EVENTS.flatMap(e => e.skills))];
 const ALL_DRL = ['Mục 1.1', 'Mục 3.1', 'Mục 3.2', 'Không ĐRL'];
 
 function initExplore() {
+// Calculate ALL_SKILLS here, AFTER the EVENTS data has been loaded
+  const ALL_SKILLS = [...new Set(EVENTS.flatMap(e => e.skills))];
+
   document.getElementById('skill-chips').innerHTML = ALL_SKILLS.map(s => `
     <button class="chip" onclick="toggleSkill('${s}',this)">${s}</button>
   `).join('');
