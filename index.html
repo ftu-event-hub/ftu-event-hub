@@ -954,8 +954,9 @@ function renderCalendar() {
 
 function selectCalDay(day) {
   selectedCalDay = day;
-  const d = new Date(calYear, calMonth, day);
-  const dateStr = d.toISOString().split('T')[0];
+  const monthStr = String(calMonth + 1).padStart(2, '0'); 
+  const dayStr = String(day).padStart(2, '0');
+  const dateStr = `${calYear}-${monthStr}-${dayStr}`;
   const dayEvents = EVENTS.filter(e => e.date === dateStr);
 
   document.getElementById('cal-selected-title').textContent =
