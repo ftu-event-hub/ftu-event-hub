@@ -762,9 +762,9 @@ function filterHome(type, el) {
 }
 
 function renderHome() {
-  const upcoming = EVENTS.filter(e => e.mucDRL !== 'x');
+  const upcoming = EVENTS.filter(e => daysUntil(e.date) >= 0);
   const clubs = [...new Set(EVENTS.map(e => e.club))].length;
-  const totalReviews = EVENTS.reduce((s,e) => s + e.reviewCount, 0);
+  const totalReviews = REVIEWS.length;
   document.getElementById('stat-upcoming').textContent = upcoming.length;
   document.getElementById('stat-clubs').textContent = clubs;
   document.getElementById('stat-reviews').textContent = totalReviews;
