@@ -1194,8 +1194,10 @@ function openModal(id) {
       `).join('')}
     ` : ''}
     ${canRegister
-      ? `<button class="modal-btn" onclick="alert('Chuyển đến link đăng ký sự kiện!')">Đăng ký tham gia →</button>`
-      : `<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:10px;font-size:13px;color:#64748b">${e.status === 'ended' ? '⚫ Sự kiện đã kết thúc' : '🟡 Đã đóng đơn đăng ký'}</div>`
+    ${canRegister
+  ? `<button class="modal-btn" onclick="window.open('${e.link}', '_blank')">Đăng ký tham gia →</button>`
+  : `<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:10px;font-size:13px;color:#64748b">${e.status === 'ended' ? '⚫ Sự kiện đã kết thúc' : '🟡 Đã đóng đơn đăng ký'}</div>`
+}
     }
   `;
   document.getElementById('modal-overlay').classList.add('open');
