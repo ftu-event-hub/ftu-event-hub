@@ -690,6 +690,27 @@ async function loadData() {
     EVENTS  = await evRes.json();
     REVIEWS = await rvRes.json();
 
+    // === THÊM ĐOẠN LOGIC NÀY VÀO ĐÂY ===
+    const t = new Date();
+    // Tạo chuỗi ngày hiện tại chuẩn YYYY-MM-DD để so sánh
+    const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+
+    EVENTS = EVENTS.map(e => {
+      // Nếu ngày sự kiện đã qua -> Đã kết thúc
+      if (e.date < todayStr) {
+        e.status = 'ended';
+      } 
+      // Nếu sự kiện chưa diễn ra nhưng đã qua deadline đăng ký -> Đóng đơn
+      else if (e.deadline < todayStr) {
+        e.status = 'closed';
+      } 
+      // Nếu chưa qua deadline thì mở đơn
+      else {
+        e.status = 'open';
+      }
+      return e;
+    });
+// ===================================
   } catch (err) {
     console.error('Lỗi load data:', err);
     showLoading(false);
@@ -774,7 +795,15 @@ function renderHome() {
   document.getElementById('stat-clubs').textContent = clubs;
   document.getElementById('stat-reviews').textContent = totalReviews;
 
-  let filtered = homeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.type === homeFilter);
+let filtered = homeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.type === homeFilter);
+
+  // 1. Chỉ lấy những sự kiện CHƯA KẾT THÚC (status khác 'ended')
+  filtered = filtered.filter(e => e.status !== 'ended');
+
+  // 2. Sắp xếp để sự kiện nào gần nhất thì ngoi lên đầu
+  filtered.sort((a, b) => a.date.localeCompare(b.date));
+
+  // 3. Cắt lấy 4 cái đầu tiên để nhét vào giao diện
   filtered = filtered.slice(0, 4);
 
   document.getElementById('home-events').innerHTML = filtered.map(e => `
