@@ -270,10 +270,12 @@ body {
 .cal-dow span { text-align: center; font-size: 13px; font-weight: 600; color: var(--gray-400); padding: 4px 0; }
 .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
 .cal-day {
-  min-height: 85px; display: flex; flex-direction: column;
+  min-height: 90px; display: flex; flex-direction: column;
   align-items: center; justify-content: center; border-radius: 8px;
   cursor: pointer; transition: background .15s; position: relative;
   font-size: 18px; font-weight: 500; color: var(--gray-700);
+  min-width: 0;
+  overflow: hidden;
 }
 .cal-day:hover { background: var(--gray-100); }
 .cal-day.other-month { color: var(--gray-300); }
