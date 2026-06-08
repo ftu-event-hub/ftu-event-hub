@@ -166,8 +166,12 @@ body {
 }
 .ecard:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .ecard-img {
-  height: 80px; display: flex; align-items: center; justify-content: center;
-  font-size: 28px; position: relative;
+  height: 140px; /* Tăng chiều cao để hiện poster */
+  background-size: cover; /* Quan trọng: ép ảnh tự scale vừa khung */
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
 }
 .ecard-body { padding: 10px; }
 .ecard-title { font-size: 12px; font-weight: 600; color: var(--gray-800); line-height: 1.3; margin-bottom: 6px; }
@@ -669,7 +673,7 @@ body {
 // ════════════════════════════════════════════════
 //  CẤU HÌNH API — Thay bằng URL Apps Script của bạn
 // ════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbyiqEGJO__CqvAtsYg6w0vx1NHQ05a8BD4aekgVUj1bidB0MIC_qeWPYNH7XIIurHX_pQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbweeVzriRh1fGILRRM3M1eg5-x1bi_kk-o1aS1ZmB9JV-WrV-HBXT1ZhedQtp0C2cSy9A/exec';
 
 // ── Biến data (sẽ được điền sau khi load) ──
 let EVENTS  = [];
@@ -808,7 +812,9 @@ let filtered = homeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.type === hom
 
   document.getElementById('home-events').innerHTML = filtered.map(e => `
     <div class="ecard" onclick="openModal(${e.id})">
-      <div class="ecard-img" style="background:${e.color}">${e.emoji}</div>
+<div class="ecard-img" style="${e.poster ? `background-image: url('${e.poster}')` : `background: ${e.color}`}">
+    ${e.poster ? '' : e.emoji}
+</div>
       <div class="ecard-body">
         <div class="ecard-title">${e.name}</div>
         <div class="ecard-meta">${formatDate(e.date)}</div>
