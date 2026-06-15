@@ -842,12 +842,17 @@ function statusBadge(status) {
 const ALL_DRL = ['Mục 1.1', 'Mục 3.1', 'Mục 3.2', 'Không ĐRL'];
 
 function initExplore() {
-// Calculate ALL_SKILLS here, AFTER the EVENTS data has been loaded
-  const ALL_SKILLS = [...new Set(EVENTS.flatMap(e => e.skills))];
+  const TOP_15_SKILLS = [
+    "Thương mại quốc tế", "Tài chính - Kế kiểm", "Marketing", "Phân tích dữ liệu", "Giao tiếp liên văn hóa",
+    "Giải quyết vấn đề", "Tư duy phản biện", "Tư duy sáng tạo",
+    "Nghiên cứu khoa học", "Phát triển dự án", "Kỹ năng giao tiếp", "Làm việc nhóm",
+    "Định hướng nghề nghiệp", "Networking", "Ứng dụng AI thực tế"
+  ];
 
-  document.getElementById('skill-chips').innerHTML = ALL_SKILLS.map(s => `
+  document.getElementById('skill-chips').innerHTML = TOP_15_SKILLS.map(s => `
     <button class="chip" onclick="toggleSkill('${s}',this)">${s}</button>
   `).join('');
+
   document.getElementById('drl-chips').innerHTML = ALL_DRL.map(d => `
     <button class="chip" onclick="toggleDrlChip('${d}',this)">${d}</button>
   `).join('');
