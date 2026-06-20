@@ -2,1375 +2,1663 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="UcaD1WN1D6utbz_vOfvYORE9EaKv-4wnMwG2n09Aas8" />
-  <title>FTU Event Hub - Tổng hợp sự kiện ngoại khóa</title>
-  <meta name="description" content="Nền tảng tổng hợp toàn bộ hoạt động ngoại khóa, sự kiện, talkshow và quản lý điểm rèn luyện dành cho sinh viên FTU.">
-  <meta name="keywords" content="FTU, sự kiện FTU, điểm rèn luyện FTU, ngoại khóa, talkshow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#c8102e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default font-sans" />
+  <meta name="apple-mobile-web-app-title" content="FTU Hub" />
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/ftu-event-hub/ftu-event-hub/main/ftu.png" />
+  <link rel="manifest" href="/manifest.json" />
+  
+  <title>FTU Event Hub - Hoạt động ngoại khóa & Quản lý điểm rèn luyện</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --green: #c8102e;
-  --green-dark: #9b0c22;
-  --green-light: #fdf0f2;
-  --green-mid: #f5b8c2;
-  --amber: #f59e0b;
-  --amber-light: #fef3c7;
-  --blue: #3b82f6;
-  --blue-light: #eff6ff;
-  --red: #ef4444;
-  --red-light: #fef2f2;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-  --white: #ffffff;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
-  --font: 'Be Vietnam Pro', sans-serif;
-}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Lucide Icons via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--font);
-  background: var(--gray-50);
-  color: var(--gray-800);
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+          },
+          colors: {
+            brand: {
+              red: '#c8102e',
+              'red-dark': '#9b0c22',
+              'red-light': 'rgba(200, 16, 46, 0.08)',
+              'red-mid': '#f5b8c2',
+            }
+          },
+          animation: {
+            'shimmer': 'shimmer 2.5s infinite linear',
+            'bounce-subtle': 'bounceSubtle 3s infinite ease-in-out',
+          },
+          keyframes: {
+            shimmer: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' },
+            },
+            bounceSubtle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-4px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
 
-/* ── LAYOUT ── */
-.app { display: flex; flex-direction: column; min-height: 100vh; }
-.main { flex: 1; padding-bottom: 80px; }
+  <style type="text/css">
+    /* Glassmorphism custom classes & glows matching the Crimson Red theme */
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.03);
+    }
+    .dark .glass-nav {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 -8px 32px 0 rgba(0, 0, 0, 0.25);
+    }
 
-/* ── PAGES ── */
-.page { display: none; animation: fadeIn .25s ease; }
-.page.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .glass-modal {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 8px 32px 0 rgba(200, 16, 46, 0.07);
+    }
+    .dark .glass-modal {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(34px) saturate(160%);
+      -webkit-backdrop-filter: blur(34px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+    }
 
-/* ── NAV ── */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--white);
-  border-top: 1px solid var(--gray-200);
-  display: flex;
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 10px 4px 8px; cursor: pointer;
-  color: var(--gray-400); font-size: 10px; gap: 3px;
-  transition: color .2s; border: none; background: none;
-  font-family: var(--font);
-}
-.nav-item svg { width: 20px; height: 20px; stroke-width: 1.8; fill: none; stroke: currentColor; }
-.nav-item.active { color: var(--green); }
-.nav-item span { font-weight: 500; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(16px) saturate(150%);
+      -webkit-backdrop-filter: blur(16px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(16px) saturate(130%);
+      -webkit-backdrop-filter: blur(16px) saturate(130%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
 
-/* ── HERO ── */
-.hero {
-  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, #e84060 100%);
-  padding: 28px 20px 24px; color: white; position: relative; overflow: hidden;
-}
-.hero::before {
-  content: ''; position: absolute; top: -40px; right: -40px;
-  width: 160px; height: 160px; border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-}
-.hero::after {
-  content: ''; position: absolute; bottom: -20px; left: 30px;
-  width: 80px; height: 80px; border-radius: 50%;
-  background: rgba(255,255,255,0.05);
-}
-.hero-tag {
-  display: inline-block; background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: white; font-size: 11px; font-weight: 500;
-  padding: 3px 10px; border-radius: 99px; margin-bottom: 10px;
-  letter-spacing: .3px;
-}
-.hero h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px; line-height: 1.2; margin-bottom: 8px;
-  font-weight: 700;
-}
-.hero-title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.hero-logo {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: white;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-.hero-title-row h1 { margin-bottom: 0; }
-.hero p { font-size: 13px; opacity: .85; line-height: 1.5; margin-bottom: 18px; }
-.hero-filters { display: flex; gap: 8px; flex-wrap: wrap; }
-.hpill {
-  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
-  color: white; font-size: 12px; font-weight: 500; padding: 5px 14px;
-  border-radius: 99px; cursor: pointer; transition: background .15s;
-  font-family: var(--font);
-}
-.hpill:hover, .hpill.active { background: rgba(255,255,255,0.3); }
+    .soft-shadow {
+      box-shadow: 0 8px 32px 0 rgba(200, 16, 46, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    }
+    .dark .soft-shadow {
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
 
-/* ── STATS ── */
-.stats-row {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px; padding: 16px;
-}
-.stat-card {
-  background: var(--white); border-radius: var(--radius);
-  padding: 14px 10px; text-align: center;
-  box-shadow: var(--shadow); border: 1px solid var(--gray-100);
-}
-.stat-n { font-size: 22px; font-weight: 700; color: var(--green-dark); line-height: 1; }
-.stat-l { font-size: 11px; color: var(--gray-500); margin-top: 3px; }
+    /* Ambient neon background spots */
+    .glow-red {
+      background: radial-gradient(circle_at_30% 20%, rgba(200, 16, 46, 0.18) 0%, transparent 60%);
+    }
+    .dark .glow-red {
+      background: radial-gradient(circle_at_30% 20%, rgba(200, 16, 46, 0.28) 0%, transparent 65%);
+    }
 
-/* ── SECTION ── */
-.section { padding: 0 16px 20px; }
-.section-head {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 12px;
-}
-.section-title { font-size: 15px; font-weight: 700; color: var(--gray-900); }
-.see-all { font-size: 12px; color: var(--green); font-weight: 500; cursor: pointer; border: none; background: none; font-family: var(--font); }
+    .glow-purple {
+      background: radial-gradient(circle_at_80% 70%, rgba(139, 92, 246, 0.12) 0%, transparent 55%);
+    }
+    .dark .glow-purple {
+      background: radial-gradient(circle_at_80% 70%, rgba(139, 92, 246, 0.22) 0%, transparent 60%);
+    }
 
-/* ── QUICK LINKS ── */
-.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.qcard {
-  background: var(--white); border-radius: var(--radius);
-  padding: 14px; display: flex; align-items: center; gap: 12px;
-  box-shadow: var(--shadow); border: 1px solid var(--gray-100);
-  cursor: pointer; transition: all .15s;
-}
-.qcard:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.qicon {
-  width: 38px; height: 38px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.qcard-text { font-size: 12px; font-weight: 600; color: var(--gray-800); }
-.qcard-sub { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
-
-/* ── EVENT CARDS ── */
-.event-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.ecard {
-  background: var(--white); border-radius: var(--radius);
-  box-shadow: var(--shadow); border: 1px solid var(--gray-100);
-  overflow: hidden; cursor: pointer; transition: all .15s;
-}
-.ecard:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.ecard-img {
-  height: 140px; /* Tăng chiều cao để hiện poster */
-  background-size: cover; /* Quan trọng: ép ảnh tự scale vừa khung */
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-}
-.ecard-body { padding: 10px; }
-.ecard-title { font-size: 12px; font-weight: 600; color: var(--gray-800); line-height: 1.3; margin-bottom: 6px; }
-.ecard-meta { font-size: 10px; color: var(--gray-400); margin-bottom: 6px; }
-.ecard-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-.ecard-stars { font-size: 10px; color: var(--gray-400); margin-top: 5px; }
-.tag {
-  font-size: 10px; padding: 2px 7px; border-radius: 99px;
-  font-weight: 500; white-space: nowrap;
-}
-.tag-green { background: var(--green-light); color: var(--green-dark); }
-.tag-blue { background: var(--blue-light); color: var(--blue); }
-.tag-amber { background: var(--amber-light); color: #92400e; }
-.tag-gray { background: var(--gray-100); color: var(--gray-500); }
-.tag-red { background: var(--red-light); color: var(--red); }
-
-/* ── CTA ── */
-.cta-box {
-  margin: 0 16px; background: var(--green-light);
-  border: 1px solid var(--green-mid); border-radius: var(--radius);
-  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-  cursor: pointer;
-}
-.cta-box-text { font-size: 12px; font-weight: 600; color: var(--green-dark); flex: 1; }
-.cta-box-sub { font-size: 11px; color: var(--green); font-weight: 400; }
-/* ── EXPLORE PAGE ── */
-.explore-top {
-  background: var(--white); padding: 16px 16px 0;
-  border-bottom: 1px solid var(--gray-100); position: sticky; top: 0; z-index: 10;
-}
-.explore-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
-.search-box {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--gray-50); border: 1px solid var(--gray-200);
-  border-radius: var(--radius-sm); padding: 9px 12px; margin-bottom: 12px;
-}
-.search-box input {
-  flex: 1; border: none; background: none; font-size: 13px;
-  color: var(--gray-800); font-family: var(--font); outline: none;
-}
-.search-box input::placeholder { color: var(--gray-400); }
-.search-icon { color: var(--gray-400); font-size: 15px; }
-.filter-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
-.filter-tabs::-webkit-scrollbar { display: none; }
-.ftab {
-  white-space: nowrap; font-size: 12px; font-weight: 500;
-  padding: 6px 14px; border-radius: 99px; border: 1px solid var(--gray-200);
-  background: var(--white); color: var(--gray-500); cursor: pointer;
-  transition: all .15s; font-family: var(--font);
-}
-.ftab.active { background: var(--green); color: var(--white); border-color: var(--green); }
-.filter-section { padding: 12px 16px 0; }
-.filter-label { font-size: 11px; font-weight: 600; color: var(--gray-400); margin-bottom: 6px; letter-spacing: .4px; text-transform: uppercase; }
-.filter-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.chip {
-  font-size: 11px; padding: 4px 12px; border-radius: 99px;
-  border: 1px solid var(--gray-200); background: var(--white);
-  color: var(--gray-500); cursor: pointer; transition: all .15s;
-  font-family: var(--font); font-weight: 500;
-}
-.chip.active { background: var(--green-light); color: var(--green-dark); border-color: var(--green-mid); }
-.results-bar {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 16px; font-size: 12px; color: var(--gray-400);
-}
-.event-list-page { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; }
-.event-row {
-  background: var(--white); border-radius: var(--radius);
-  border: 1px solid var(--gray-100); padding: 14px;
-  box-shadow: var(--shadow); cursor: pointer; transition: all .15s;
-}
-.event-row:hover { border-color: var(--green-mid); box-shadow: var(--shadow-md); }
-.er-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 5px; }
-.er-title { font-size: 13px; font-weight: 600; color: var(--gray-800); line-height: 1.3; flex: 1; }
-.er-drl { font-size: 11px; padding: 3px 9px; border-radius: 99px; background: var(--blue-light); color: var(--blue); font-weight: 600; white-space: nowrap; }
-.er-meta { font-size: 11px; color: var(--gray-400); margin-bottom: 7px; }
-.er-tags { display: flex; gap: 5px; flex-wrap: wrap; }
-.er-stars { font-size: 11px; color: var(--gray-400); margin-top: 6px; }
-.empty-state { text-align: center; padding: 40px 20px; color: var(--gray-400); }
-.empty-state .big { font-size: 36px; margin-bottom: 8px; }
-.empty-state p { font-size: 13px; }
-
-/* ── CALENDAR PAGE ── */
-.cal-header-bar {
-  background: var(--white); padding: 16px;
-  border-bottom: 1px solid var(--gray-100);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.cal-title-row { font-size: 18px; font-weight: 700; }
-.cal-nav { display: flex; gap: 8px; align-items: center; }
-.cal-nav button {
-  background: var(--gray-100); border: none; border-radius: 8px;
-  width: 32px; height: 32px; cursor: pointer; font-size: 14px;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
-}
-.cal-nav button:hover { background: var(--gray-200); }
-.cal-month-label { font-size: 14px; font-weight: 600; color: var(--gray-700); min-width: 100px; text-align: center; }
-.cal-grid-wrap { padding: 12px 16px; }
-.cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px; }
-.cal-dow span { text-align: center; font-size: 13px; font-weight: 600; color: var(--gray-400); padding: 4px 0; }
-.cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-.cal-day {
-  min-height: 90px; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; border-radius: 8px;
-  cursor: pointer; transition: background .15s; position: relative;
-  font-size: 18px; font-weight: 500; color: var(--gray-700);
-  min-width: 0;
-  overflow: hidden;
-}
-.cal-day:hover { background: var(--gray-100); }
-.cal-day.other-month { color: var(--gray-300); }
-.cal-day.today { background: var(--green); color: white; font-weight: 700; }
-.cal-day.has-event { background: var(--green-light); color: var(--green-dark); font-weight: 600; }
-.cal-day.today.has-event { background: var(--green); color: white; }
-.cal-dot {
-  width: 4px; height: 4px; border-radius: 50%; background: var(--green);
-  position: absolute; bottom: 3px;
-}
-.cal-day.today .cal-dot { background: white; }
-.cal-events-below { padding: 0 16px 16px; }
-.cal-day-events-title { font-size: 13px; font-weight: 700; color: var(--gray-700); margin-bottom: 10px; padding-top: 4px; border-top: 1px solid var(--gray-100); }
-.cal-legend { display: flex; gap: 12px; padding: 0 16px 12px; }
-.leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--gray-400); }
-.leg-dot { width: 8px; height: 8px; border-radius: 2px; }
-
-/* ── REVIEW PAGE ── */
-.review-header {
-  background: var(--white); padding: 16px;
-  border-bottom: 1px solid var(--gray-100);
-}
-.review-header h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.review-header p { font-size: 12px; color: var(--gray-400); }
-.review-trust {
-  margin: 12px 16px; background: var(--green-light);
-  border: 1px solid var(--green-mid); border-radius: var(--radius);
-  padding: 10px 14px; font-size: 12px; color: var(--green-dark); font-weight: 500;
-}
-.ev-selector { padding: 12px 16px; }
-.ev-selector-label { font-size: 11px; font-weight: 600; color: var(--gray-400); letter-spacing: .4px; text-transform: uppercase; margin-bottom: 8px; }
-.ev-pills { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
-.ev-pills::-webkit-scrollbar { display: none; }
-.evpill {
-  white-space: nowrap; font-size: 12px; font-weight: 500;
-  padding: 6px 14px; border-radius: 99px;
-  border: 1px solid var(--gray-200); background: var(--white);
-  color: var(--gray-500); cursor: pointer; transition: all .15s;
-  font-family: var(--font);
-}
-.evpill.active { background: var(--green); color: white; border-color: var(--green); }
-.score-card {
-  margin: 0 16px 12px; background: var(--white);
-  border: 1px solid var(--gray-100); border-radius: var(--radius);
-  padding: 14px; box-shadow: var(--shadow);
-}
-.score-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--gray-700); }
-.score-main { display: flex; gap: 16px; align-items: center; }
-.big-score { font-size: 38px; font-weight: 700; color: var(--green-dark); line-height: 1; }
-.score-stars { font-size: 14px; margin-top: 3px; }
-.score-count { font-size: 11px; color: var(--gray-400); }
-.score-bars { flex: 1; }
-.bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-.bar-row span { font-size: 10px; color: var(--gray-400); min-width: 8px; }
-.bar-track { flex: 1; height: 5px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
-.bar-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .4s ease; }
-.reviews-list { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
-.rcard {
-  background: var(--white); border: 1px solid var(--gray-100);
-  border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow);
-}
-.rc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-.rc-user { font-size: 12px; font-weight: 600; color: var(--gray-700); }
-.rc-stars { font-size: 12px; color: var(--amber); }
-.rc-body { font-size: 12px; color: var(--gray-600); line-height: 1.5; margin-bottom: 8px; }
-.rc-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-.write-review-btn {
-  margin: 14px 16px; padding: 12px;
-  background: var(--white); border: 1.5px dashed var(--gray-200);
-  border-radius: var(--radius); text-align: center;
-  font-size: 13px; font-weight: 500; color: var(--gray-500);
-  cursor: pointer; transition: all .15s; font-family: var(--font);
-  width: calc(100% - 32px);
-}
-.write-review-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-light); }
-
-/* ── DRL PAGE ── */
-.drl-header {
-  background: var(--white); padding: 16px;
-  border-bottom: 1px solid var(--gray-100);
-}
-.drl-header h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.drl-header p { font-size: 12px; color: var(--gray-400); }
-.drl-muc-tabs { display: flex; gap: 8px; padding: 14px 16px; }
-.drl-tab {
-  flex: 1; padding: 10px 4px; border-radius: var(--radius-sm);
-  text-align: center; font-size: 12px; font-weight: 600;
-  border: 1.5px solid var(--gray-200); background: var(--white);
-  color: var(--gray-400); cursor: pointer; transition: all .15s;
-  font-family: var(--font);
-}
-.drl-tab.active { background: var(--green); color: white; border-color: var(--green); }
-.drl-list { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
-.drl-item {
-  background: var(--white); border: 1px solid var(--gray-100);
-  border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow);
-  cursor: pointer; transition: all .15s;
-}
-.drl-item:hover { border-color: var(--green-mid); }
-.drl-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-.drl-muc-badge { font-size: 10px; font-weight: 600; color: var(--blue); background: var(--blue-light); padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; display: inline-block; }
-.drl-item-name { font-size: 13px; font-weight: 600; color: var(--gray-800); line-height: 1.3; }
-.drl-pts { font-size: 15px; font-weight: 700; color: var(--green-dark); }
-.drl-item-meta { font-size: 11px; color: var(--gray-400); margin-top: 5px; }
-.deadline-soon { color: var(--red); font-weight: 600; }
-
-/* ── MODAL ── */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5); z-index: 200;
-  align-items: flex-end; justify-content: center;
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: var(--white); border-radius: 20px 20px 0 0;
-  width: 100%; max-height: 85vh; overflow-y: auto;
-  animation: slideUp .25s ease;
-}
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal-handle {
-  width: 36px; height: 4px; background: var(--gray-200);
-  border-radius: 2px; margin: 12px auto 16px;
-}
-.modal-body { padding: 0 20px 32px; }
-.modal-event-img {
-  height: 120px; border-radius: var(--radius);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 48px; margin-bottom: 16px;
-}
-.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
-.modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-.modal-info { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.modal-info-row { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
-.modal-info-icon { font-size: 16px; flex-shrink: 0; }
-.modal-info-label { color: var(--gray-400); font-size: 11px; }
-.modal-info-val { color: var(--gray-700); font-weight: 500; }
-.modal-desc { font-size: 13px; color: var(--gray-600); line-height: 1.6; margin-bottom: 16px; background: var(--gray-50); border-radius: var(--radius-sm); padding: 12px; }
-.modal-btn {
-  width: 100%; padding: 14px; border-radius: var(--radius);
-  background: var(--green); color: white; border: none;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  font-family: var(--font); transition: background .15s;
-}
-.modal-btn:hover { background: var(--green-dark); }
-.modal-close {
-  float: right; background: var(--gray-100); border: none;
-  border-radius: 50%; width: 30px; height: 30px; cursor: pointer;
-  font-size: 16px; display: flex; align-items: center; justify-content: center;
-  margin-left: 8px; flex-shrink: 0;
-}
-
-/* ── SCROLL TOP AREA ── */
-.page-scroll { max-height: calc(100vh - 57px); overflow-y: auto; }
-</style>
+    /* Hide standard scrollbars but support scrolling */
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
-<body><!-- ══ LOADING OVERLAY ══ -->
-<div id="loading-overlay" style="
-  position:fixed; inset:0; background:white; z-index:9999;
-  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px;
-">
-  <div style="
-    width:44px; height:44px;
-    border:3px solid #fdf0f2; border-top-color:#c8102e;
-    border-radius:50%; animation:spin .8s linear infinite;
-  "></div>
-  <div style="text-align:center">
-    <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:2px">FTU Event Hub</p>
-    <p style="font-size:11px;color:#9ca3af">Đang tải dữ liệu...</p>
-  </div>
-</div>
-<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex justify-center selection:bg-brand-red/10 selection:text-brand-red transition-colors duration-200">
 
-<div class="app">
-  <main class="main">
+  <!-- Core Smartphone-like Container -->
+  <div class="w-full max-w-lg bg-white/70 dark:bg-slate-900/60 min-h-screen shadow-2xl relative flex flex-col pb-24 border-x border-slate-200/50 dark:border-white/10 overflow-hidden backdrop-blur-xl">
+    
+    <!-- Red Accent Ambient Glow Backgrounds -->
+    <div class="absolute inset-0 glow-red pointer-events-none -z-10" />
+    <div class="absolute inset-0 glow-purple pointer-events-none -z-10" />
 
-    <!-- ═══════════════ HOME PAGE ═══════════════ -->
-    <div class="page active" id="page-home">
-      <div class="hero"> 
-<button onclick="reloadData()" style="
-  position:absolute; top:16px; right:16px;
-  background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3);
-  color:white; border-radius:8px; padding:5px 10px; font-size:11px; cursor:pointer;
-">🔄 Làm mới</button>
-
-        <div class="hero-tag">🎓 FTU Event Hub</div>
-        <div class="hero-title-row">
-  <img src="https://raw.githubusercontent.com/ftu-event-hub/ftu-event-hub/main/ftu.png" alt="FTU" class="hero-logo">
-  <h1>Sự kiện ngoại khóa FTU</h1>
-</div>
-        <p>Tổng hợp toàn bộ hoạt động ngoại khóa — lọc theo ĐRL, kỹ năng và định hướng của bạn</p>
-        <div class="hero-filters">
-          <button class="hpill active" onclick="filterHome('all',this)">Tất cả</button>
-          <button class="hpill" onclick="filterHome('Talkshow',this)">Talkshow</button>
-          <button class="hpill" onclick="filterHome('Workshop',this)">Workshop</button>
-          <button class="hpill" onclick="filterHome('Tình nguyện',this)">Tình nguyện</button>
-          <button class="hpill" onclick="filterHome('Cuộc thi',this)">Cuộc thi</button>
-        </div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-n" id="stat-upcoming">0</div><div class="stat-l">Sự kiện sắp tới</div></div>
-        <div class="stat-card"><div class="stat-n" id="stat-clubs">0</div><div class="stat-l">CLB tham gia</div></div>
-        <div class="stat-card"><div class="stat-n" id="stat-reviews">0</div><div class="stat-l">Lượt đánh giá</div></div>
-      </div>
-
-      <div class="section">
-        <div class="section-head">
-          <span class="section-title">🔥 Sự kiện nổi bật</span>
-          <button class="see-all" onclick="showPage('explore')">Xem tất cả →</button>
-        </div>
-        <div class="event-grid" id="home-events"></div>
-      </div>
-
-      <div class="section" style="padding-top:0">
-        <div class="section-head"><span class="section-title">Truy cập nhanh</span></div>
-        <div class="quick-grid">
-          <div class="qcard" onclick="showPage('explore')">
-            <div class="qicon" style="background:#e6f7f1">🔍</div>
-            <div><div class="qcard-text">Khám phá</div><div class="qcard-sub">Tất cả sự kiện</div></div>
-          </div>
-          <div class="qcard" onclick="showPage('calendar')">
-            <div class="qicon" style="background:#eff6ff">📅</div>
-            <div><div class="qcard-text">Lịch tháng</div><div class="qcard-sub">Xem theo ngày</div></div>
-          </div>
-          <div class="qcard" onclick="showPage('review')">
-            <div class="qicon" style="background:#fdf0f2">📚</div>
-            <div><div class="qcard-text">Trạm Tri Thức</div><div class="qcard-sub">Review & Key Takeaways</div></div>
-          </div>
-          <div class="qcard" onclick="showPage('drl')">
-            <div class="qicon" style="background:#fef2f2">🎯</div>
-            <div><div class="qcard-text">Lọc ĐRL</div><div class="qcard-sub">Theo mục điểm</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="cta-box" onclick="window.open('https://tally.so/r/ODoqeR', '_blank')">
-        <div>
-          <div class="cta-box-text">📮 Bạn là BTC sự kiện?</div>
-          <div class="cta-box-sub">Gửi event của bạn lên Hub ngay</div>
-        </div>
-        <span class="cta-arrow">→</span>
-      </div>
-      <div style="height:16px"></div>
-    </div>
-
-    <!-- ═══════════════ EXPLORE PAGE ═══════════════ -->
-    <div class="page" id="page-explore">
-      <div class="explore-top">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <div class="explore-title" style="margin:0">🔍 Khám phá</div>
-        </div>
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Tìm theo tên CLB, chủ đề, kỹ năng..." id="search-input" oninput="renderExplore()">
-        </div>
-        <div class="filter-tabs" id="type-filter">
-          <button class="ftab active" onclick="setTypeFilter('all',this)">Tất cả</button>
-          <button class="ftab" onclick="setTypeFilter('Talkshow',this)">Talkshow</button>
-          <button class="ftab" onclick="setTypeFilter('Workshop',this)">Workshop</button>
-          <button class="ftab" onclick="setTypeFilter('Cuộc thi',this)">Cuộc thi</button>
-          <button class="ftab" onclick="setTypeFilter('Tình nguyện',this)">Tình nguyện</button>
-          <button class="ftab" onclick="setTypeFilter('Tuyển thành viên',this)">Tuyển TV</button>
-        </div>
-      </div>
-      <div class="filter-section">
-        <div class="filter-label">Kỹ năng</div>
-        <div class="filter-chips" id="skill-chips"></div>
-        <div class="filter-label">Mục ĐRL</div>
-        <div class="filter-chips" id="drl-chips"></div>
-      </div>
-      <div class="results-bar">
-        <span id="results-count">Đang tải...</span>
-        <select onchange="setSortMode(this.value)" style="font-size:12px;color:#6b7280;border:none;background:none;font-family:'Be Vietnam Pro',sans-serif;cursor:pointer">
-          <option value="date">Sắp tới trước</option>
-          <option value="rating">Rating cao nhất</option>
-          <option value="drl">ĐRL cao nhất</option>
-        </select>
-      </div>
-      <div class="event-list-page" id="explore-list"></div>
-    </div>
-
-    <!-- ═══════════════ CALENDAR PAGE ═══════════════ -->
-    <div class="page" id="page-calendar">
-      <div class="cal-header-bar">
-        <div class="cal-title-row">📅 Lịch sự kiện</div>
-        <div class="cal-nav">
-          <button onclick="changeMonth(-1)">‹</button>
-          <span class="cal-month-label" id="cal-month-label"></span>
-          <button onclick="changeMonth(1)">›</button>
-        </div>
-      </div>
-      <div class="cal-grid-wrap">
-        <div class="cal-dow">
-          <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
-        </div>
-        <div class="cal-days" id="cal-days"></div>
-      </div>
-      <div class="cal-legend">
-  <div class="leg-item"><div class="leg-dot" style="background:var(--green-light);border:1px solid var(--green-mid)"></div>Có sự kiện</div>
-  <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Hôm nay</div>
-</div>
-      <div class="cal-events-below">
-        <div class="cal-day-events-title" id="cal-selected-title">Chọn ngày để xem sự kiện</div>
-        <div id="cal-day-events"></div>
-      </div>
-    </div>
-
-    <!-- ═══════════════ REVIEW PAGE ═══════════════ -->
-    <div class="page" id="page-review">
-      <div class="review-header">
-        <h2>📚 Trạm Tri Thức & Review</h2>
-        <p>Học lỏm kiến thức từ sự kiện bạn lỡ mất — đánh giá thật từ sinh viên FTU</p>
-      </div>
-      <div class="review-trust">✅ Tất cả review đã được kiểm duyệt bởi nhóm FTU Event Hub</div>
-
-      <!-- CLB Reputation Section -->
-      <div style="padding:12px 16px 0">
-        <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">🏅 Uy tín CLB tổ chức</div>
-        <div id="club-reputation-list" style="display:flex;flex-direction:column;gap:8px"></div>
-      </div>
-
-      <div style="padding:12px 16px 4px;border-top:1px solid #f3f4f6;margin-top:12px">
-        <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">📖 Chọn sự kiện để đọc Key Takeaways</div>
-        <div class="ev-pills" id="review-event-pills"></div>
-      </div>
-      <div class="score-card" id="score-card"></div>
-      <div class="reviews-list" id="reviews-list"></div>
-      <button class="write-review-btn" onclick="window.open('https://tally.so/r/pbk2xq', '_blank')">
-        ✏️ Chia sẻ trải nghiệm & Key Takeaways của bạn
+    <!-- FLOATING THEME SELECTOR -->
+    <div class="fixed top-4 right-4 sm:right-auto sm:left-[calc(50%+190px)] z-40">
+      <button id="theme-toggle" class="w-10 h-10 rounded-full bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/50 dark:border-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center cursor-pointer shadow-lg active:scale-95 transition-all backdrop-blur-md">
+        <i data-lucide="moon" class="w-4.5 h-4.5 dark:hidden"></i>
+        <i data-lucide="sun" class="w-4.5 h-4.5 hidden dark:block"></i>
       </button>
-      <div style="padding:4px 16px 8px;font-size:11px;color:#9ca3af;text-align:center">
-        Review sẽ được hiện sau khi kiểm duyệt (trong 24h)
-      </div>
     </div>
 
-    <!-- ═══════════════ DRL PAGE ═══════════════ -->
-    <div class="page" id="page-drl">
-      <div class="drl-header">
-        <h2>🎯 Lọc theo ĐRL</h2>
-        <p>Tìm sự kiện cộng điểm rèn luyện theo mục bạn cần</p>
-      </div>
-      <div class="drl-muc-tabs">
-        <button class="drl-tab active" onclick="setDrlMuc('1.1',this)">Mục 1.1</button>
-        <button class="drl-tab" onclick="setDrlMuc('3.1',this)">Mục 3.1</button>
-        <button class="drl-tab" onclick="setDrlMuc('3.2',this)">Mục 3.2</button>
-        <button class="drl-tab" onclick="setDrlMuc('0',this)">Không ĐRL</button>
-      </div>
-      <div style="padding:0 16px 8px;font-size:12px;color:#6b7280" id="drl-muc-desc"></div>
-      <div class="drl-list" id="drl-list"></div>
-    </div>
+    <!-- MAIN APP SCREEN BODY -->
+    <main id="app-viewport" class="flex-grow select-none">
+      <!-- Views are dynamically injected here -->
+    </main>
 
-  </main>
-
-  <!-- ═══════════════ BOTTOM NAV ═══════════════ -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" id="nav-home" onclick="showPage('home')">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Trang chủ</span>
-    </button>
-    <button class="nav-item" id="nav-explore" onclick="showPage('explore')">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <span>Khám phá</span>
-    </button>
-    <button class="nav-item" id="nav-calendar" onclick="showPage('calendar')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span>Lịch</span>
-    </button>
-    <button class="nav-item" id="nav-review" onclick="showPage('review')">
-      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      <span>Tri Thức</span>
-    </button>
-    <button class="nav-item" id="nav-drl" onclick="showPage('drl')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-      <span>ĐRL</span>
-    </button>
-  </nav>
-</div>
-
-<!-- ═══════════════ EVENT MODAL ═══════════════ -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-body" id="modal-body"></div>
-  </div>
-</div>
-
-
-   <script>
-// ══════════════════════════════════════════
-//   CẤU HÌNH API
-// ══════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbweeVzriRh1fGILRRM3M1eg5-x1bi_kk-o1aS1ZmB9JV-WrV-HBXT1ZhedQtp0C2cSy9A/exec';
-
-// ══════════════════════════════════════════
-//   UUID → LABEL MAPPING (fix Tally form)
-//   
-// ══════════════════════════════════════════
-const TYPE_MAP = {
-  '3bb05abc-6500-4a8d-8966-95cf9f53c60f': 'Workshop',
-  '0dcb82c6-ea73-482c-96f7-9051559039c1': 'Webinar',
-  'f1a2b3c4-0001-0001-0001-000000000001': 'Talkshow',
-  'f1a2b3c4-0001-0001-0001-000000000002': 'Cuộc thi',
-  'f1a2b3c4-0001-0001-0001-000000000003': 'Tình nguyện',
-  'f1a2b3c4-0001-0001-0001-000000000004': 'Tuyển thành viên',
-  'f1a2b3c4-0001-0001-0001-000000000005': 'Lễ phát động',
-  'f1a2b3c4-0001-0001-0001-000000000006': 'Tọa đàm',
-  'f1a2b3c4-0001-0001-0001-000000000007': 'Sự kiện thường niên',
-};
-
-const MODE_MAP = {
-  '97695df4-4d69-4a01-904c-f4c80aa8f0d9': 'Online',
-  '9fd0eac3-7f86-46cd-b7cb-cb9bf92dbb0b': 'Offline',
-  'f1a2b3c4-0002-0002-0002-000000000001': 'Hybrid',
-};
-
-const MUCDRL_MAP = {
-  'a45df4dc-3e1d-4193-9ba4-f893d6cd3dc4': '3.1',
-  '459fd61b-b6b9-4144-838b-553d69fef02d': '3.2',
-  'f1a2b3c4-0003-0003-0003-000000000001': '1.1',
-  'f1a2b3c4-0003-0003-0003-000000000002': '0',
-};
-
-
-function mapField(value, mapping) {
-  if (!value) return value;
-  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  if (UUID_RE.test(value.trim())) {
-    return mapping[value.trim()] || value; 
-  }
-  return value;
-}
-
-
-let EVENTS  = [];
-let REVIEWS = [];
-
-
-function convertDriveLink(url) {
-  if (!url) return '';
-  const match = url.match(/\/d\/(.*?)(\/|$)/);
-  if (match && match[1] && url.includes('drive.google.com')) {
-    return `https://lh3.googleusercontent.com/d/${match[1]}`;
-  }
-  return url;
-}
-
-
-function posterStyle(e) {
-  if (e.POSTER) {
-    return `background-image: url('${e.POSTER}'); background-size: cover; background-position: center;`;
-  }
-  return `background: ${e.color || '#fdf0f2'}`;
-}
-
-
-function posterInner(e) {
-  if (e.POSTER) {
-    const safeColor = (e.color || '#fdf0f2').replace(/'/g, '');
-    const safeEmoji = (e.emoji || '').replace(/'/g, '');
-    return `<img src="${e.POSTER}"
-      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;"
-      onerror="this.parentElement.style.backgroundImage='none';this.parentElement.style.background='${safeColor}';this.parentElement.innerHTML='<span style=\\'font-size:32px\\'>${safeEmoji}</span>';"
-      alt="">`;
-  }
-  return e.emoji || '';
-}
-
-
-async function loadData() {
-  showLoading(true);
-
-  try {
-    const [evRes, rvRes] = await Promise.all([
-      fetch(API_URL + '?action=getEvents&t=' + Date.now()),
-      fetch(API_URL + '?action=getReviews&t=' + Date.now())
-    ]);
-
-    if (!evRes.ok || !rvRes.ok) throw new Error('Network error');
-
-    EVENTS  = await evRes.json();
-    REVIEWS = await rvRes.json();
-
-    const t = new Date();
-    const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
-
-    EVENTS = EVENTS.map(e => {
-
-      e.type   = mapField(e.type,   TYPE_MAP);
-      e.mode   = mapField(e.mode,   MODE_MAP);
-      e.mucDRL = mapField(e.mucDRL, MUCDRL_MAP);
-
-   
-      if (e.POSTER) {
-        e.POSTER = convertDriveLink(e.POSTER);
-      }
-
-      if (e.date < todayStr) {
-        e.status = 'ended';
-      } else if (e.deadline < todayStr) {
-        e.status = 'closed';
-      } else {
-        e.status = 'open';
-      }
-
-      if (!e.mucDRL || e.mucDRL === '') e.mucDRL = '0';
-
-      return e;
-    });
-
-  } catch (err) {
-    console.error('Lỗi load data:', err);
-    showLoading(false);
-    document.getElementById('loading-overlay').innerHTML = `
-      <div style="text-align:center;padding:24px">
-        <div style="font-size:40px;margin-bottom:10px"></div>
-        <p style="font-size:14px;color:#374151;font-weight:600;margin-bottom:4px">Không thể tải dữ liệu</p>
-        <p style="font-size:12px;color:#9ca3af;margin-bottom:16px">Kiểm tra kết nối mạng và thử lại</p>
-        <button onclick="reloadData()"
-          style="padding:9px 22px;background:#c8102e;color:white;border:none;
-                 border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">
-          Thử lại
+    <!-- FLOATING SYNC NOTIFICATION TOAST -->
+    <div id="toast-container" class="fixed bottom-24 right-4 left-4 sm:left-auto sm:right-6 sm:w-80 z-50 pointer-events-auto hidden">
+      <div class="glass-modal soft-shadow border border-slate-200/50 dark:border-slate-800/50 rounded-2xl p-4 flex gap-3.5 items-start justify-between shadow-xl">
+        <div class="bg-brand-red/10 p-2.5 rounded-xl text-brand-red flex-shrink-0 animate-pulse">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-grow min-w-0">
+          <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+            Cập nhật sự kiện mới
+          </h4>
+          <p class="text-[10px] text-slate-500 mt-1 leading-relaxed">
+            Nội dung các hoạt động ngoại khóa FTU vừa được cập nhật.
+          </p>
+          <button id="toast-refresh-btn" class="mt-2.5 flex items-center gap-1 px-2.5 py-1.5 bg-brand-red hover:bg-brand-red-dark text-white rounded-lg text-[10px] font-bold cursor-pointer active:scale-95 transition-all">
+            <i data-lucide="refresh-cw" class="w-3 h-3"></i> Làm mới ngay
+          </button>
+        </div>
+        <button id="toast-close" class="p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 flex-shrink-0 transition-colors">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
         </button>
       </div>
-    `;
-    document.getElementById('loading-overlay').style.display = 'flex';
-    return false;
-  }
+    </div>
 
-  showLoading(false);
-  return true;
-}
+    <!-- GLASS BOTTOM NAVIGATION BAR -->
+    <nav class="fixed bottom-0 left-0 right-0 sm:left-[calc(50%-256px)] sm:right-[calc(50%-256px)] z-30 h-20 px-4 py-2 flex items-center justify-around glass-nav pb-env-safe">
+      <button data-tab="home" class="nav-btn flex flex-col items-center justify-center w-14 h-14 rounded-2xl cursor-pointer transition-all duration-150 relative text-brand-red font-bold">
+        <i data-lucide="home" class="w-5 h-5 mb-1"></i>
+        <span class="text-[9px] tracking-tight font-semibold">Trang chủ</span>
+        <span class="nav-dot w-1.5 h-1.5 rounded-full bg-brand-red absolute bottom-1"></span>
+      </button>
 
-function showLoading(show) {
-  document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none';
-}
+      <button data-tab="explore" class="nav-btn flex flex-col items-center justify-center w-14 h-14 rounded-2xl cursor-pointer transition-all duration-150 relative text-slate-400 dark:text-slate-500">
+        <i data-lucide="search" class="w-5 h-5 mb-1"></i>
+        <span class="text-[9px] tracking-tight font-semibold">Khám phá</span>
+        <span class="nav-dot w-1.5 h-1.5 rounded-full bg-brand-red absolute bottom-1 hidden"></span>
+      </button>
 
-async function reloadData() {
-  const ok = await loadData();
-  if (ok) {
-    renderHome();
-    initExplore();
-    renderExplore();
-  }
-}
+      <button data-tab="calendar" class="nav-btn flex flex-col items-center justify-center w-14 h-14 rounded-2xl cursor-pointer transition-all duration-150 relative text-slate-400 dark:text-slate-500">
+        <i data-lucide="calendar" class="w-5 h-5 mb-1"></i>
+        <span class="text-[9px] tracking-tight font-semibold">Lịch</span>
+        <span class="nav-dot w-1.5 h-1.5 rounded-full bg-brand-red absolute bottom-1 hidden"></span>
+      </button>
 
-// ══════════════════════════════════════════
-//   STATE
-// ══════════════════════════════════════════
-let currentPage = 'home';
-let homeFilter = 'all';
-let typeFilter = 'all';
-let skillFilters = [];
-let drlFilters = [];
-let sortMode = 'date';
-let currentDrlMuc = '3.1';
-let selectedReviewEvent = null;
-let calYear, calMonth, selectedCalDay = null;
+      <button data-tab="review" class="nav-btn flex flex-col items-center justify-center w-14 h-14 rounded-2xl cursor-pointer transition-all duration-150 relative text-slate-400 dark:text-slate-500">
+        <i data-lucide="book-open" class="w-5 h-5 mb-1"></i>
+        <span class="text-[9px] tracking-tight font-semibold">Tri Thức</span>
+        <span class="nav-dot w-1.5 h-1.5 rounded-full bg-brand-red absolute bottom-1 hidden"></span>
+      </button>
 
-// ══════════════════════════════════════════
-//   NAVIGATION
-// ══════════════════════════════════════════
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('nav-' + page).classList.add('active');
-  currentPage = page;
-  if (page === 'explore') renderExplore();
-  if (page === 'calendar') renderCalendar();
-  if (page === 'review') renderReview();
-  if (page === 'drl') renderDRL();
-  window.scrollTo(0, 0);
-}
+      <button data-tab="drl" class="nav-btn flex flex-col items-center justify-center w-14 h-14 rounded-2xl cursor-pointer transition-all duration-150 relative text-slate-400 dark:text-slate-500">
+        <i data-lucide="award" class="w-5 h-5 mb-1"></i>
+        <span class="text-[9px] tracking-tight font-semibold">ĐRL</span>
+        <span class="nav-dot w-1.5 h-1.5 rounded-full bg-brand-red absolute bottom-1 hidden"></span>
+      </button>
+    </nav>
 
-// ══════════════════════════════════════════
-//   HOME
-// ══════════════════════════════════════════
-function filterHome(type, el) {
-  homeFilter = type;
-  document.querySelectorAll('.hpill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  renderHome();
-}
-
-function renderHome() {
-  const upcoming = EVENTS.filter(e => daysUntil(e.date) >= 0);
-  const clubs = [...new Set(EVENTS.map(e => e.club))].length;
-  const totalReviews = REVIEWS.length;
-  document.getElementById('stat-upcoming').textContent = upcoming.length;
-  document.getElementById('stat-clubs').textContent = clubs;
-  document.getElementById('stat-reviews').textContent = totalReviews;
-
-  let filtered = homeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.type === homeFilter);
-filtered = filtered.filter(e => e.status !== 'ended');
-filtered.sort((a, b) => a.date.localeCompare(b.date));
-
-  document.getElementById('home-events').innerHTML = filtered.map(e => `
-    <div class="ecard" onclick="openModal(${e.id})">
-      <div class="ecard-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
-        ${posterInner(e)}
-      </div>
-      <div class="ecard-body">
-        <div class="ecard-title">${e.name}</div>
-        <div class="ecard-meta">${formatDate(e.date)}</div>
-        <div class="ecard-tags">
-          ${statusBadge(e.status)}
-          ${e.mucDRL && e.mucDRL !== '0' ? `<span class="tag tag-blue">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : '<span class="tag tag-gray">Không ĐRL</span>'}
-          ${(e.skills || []).slice(0,1).map(s => `<span class="tag tag-green">${s}</span>`).join('')}
+    <!-- DETAIL SHEET BOTTOM MODAL OVERLAY -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black/60 z-50 flex justify-center items-end sm:items-center p-0 sm:p-4 backdrop-blur-xs hidden transition-all duration-300 opacity-0">
+      <div id="modal-sheet" class="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl max-h-[90vh] sm:max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-t sm:border border-slate-100 dark:border-slate-800 glass-modal transform translate-y-full transition-transform duration-300">
+        <!-- Bottom sheet drag bar on mobile -->
+        <div class="sm:hidden flex justify-center py-2.5 flex-shrink-0">
+          <div class="w-10 h-1 rounded-full bg-slate-200 dark:bg-slate-700"></div>
         </div>
-        ${e.rating > 0 ? `<div class="ecard-stars">${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
+        <div class="px-5 py-3 sm:py-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-brand-red"></i> Chi tiết hoạt động
+          </span>
+          <button id="modal-close" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer">
+            <i data-lucide="x" class="w-4.5 h-4.5"></i>
+          </button>
+        </div>
+        <div id="modal-body" class="p-5 overflow-y-auto space-y-4 flex-grow">
+          <!-- Dynamic loaded modal details go here -->
+        </div>
+        <div id="modal-footer" class="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex-shrink-0">
+          <!-- dynamic single btn or fallback -->
+        </div>
       </div>
     </div>
-  `).join('');
-}
 
-function statusBadge(status) {
-  if (status === 'open')   return '<span class="tag" style="background:#dcfce7;color:#166534">Đang mở đơn</span>';
-  if (status === 'closed') return '<span class="tag" style="background:#fef9c3;color:#854d0e">Đã đóng đơn</span>';
-  if (status === 'ended')  return '<span class="tag" style="background:#f1f5f9;color:#64748b">Đã kết thúc</span>';
-  return '';
-}
+  </div>
 
-// ══════════════════════════════════════════
-//   EXPLORE
-// ══════════════════════════════════════════
-const ALL_DRL = ['Mục 1.1', 'Mục 3.1', 'Mục 3.2', 'Không ĐRL'];
+  <script>
+    // ══════════════════════════════════════════
+    //   API CONFIGURATION
+    // ══════════════════════════════════════════
+    const API_URL = 'https://script.google.com/macros/s/AKfycbweeVzriRh1fGILRRM3M1eg5-x1bi_kk-o1aS1ZmB9JV-WrV-HBXT1ZhedQtp0C2cSy9A/exec';
+    const CACHE_KEY = 'ftu_event_hub_cache_v3';
+    const TTL = 15 * 60 * 1000; // 15-minute cache
 
-function initExplore() {
-  const TOP_15_SKILLS = [
-    "Thương mại quốc tế", "Tài chính - Kế kiểm", "Marketing", "Phân tích dữ liệu", "Giao tiếp liên văn hóa",
-    "Giải quyết vấn đề", "Tư duy phản biện", "Tư duy sáng tạo",
-    "Nghiên cứu khoa học", "Phát triển dự án", "Kỹ năng giao tiếp", "Làm việc nhóm",
-    "Định hướng nghề nghiệp", "Networking", "Ứng dụng AI thực tế"
-  ];
-  document.getElementById('skill-chips').innerHTML = TOP_15_SKILLS.map(s => `
-    <button class="chip" onclick="toggleSkill('${s}',this)">${s}</button>
-  `).join('');
-  document.getElementById('drl-chips').innerHTML = ALL_DRL.map(d => `
-    <button class="chip" onclick="toggleDrlChip('${d}',this)">${d}</button>
-  `).join('');
-}
+    // ══════════════════════════════════════════
+    //   UUID → VISUAL LABELS DICTIONARIES
+    // ══════════════════════════════════════════
+    const TYPE_MAP = {
+      '3bb05abc-6500-4a8d-8966-95cf9f53c60f': 'Workshop',
+      '0dcb82c6-ea73-482c-96f7-9051559039c1': 'Webinar',
+      'f1a2b3c4-0001-0001-0001-000000000001': 'Talkshow',
+      'f1a2b3c4-0001-0001-0001-000000000002': 'Cuộc thi',
+      'f1a2b3c4-0001-0001-0001-000000000003': 'Tình nguyện',
+      'f1a2b3c4-0001-0001-0001-000000000004': 'Tuyển thành viên',
+      'f1a2b3c4-0001-0001-0001-000000000005': 'Lễ phát động',
+      'f1a2b3c4-0001-0001-0001-000000000006': 'Tọa đàm',
+      'f1a2b3c4-0001-0001-0001-000000000007': 'Sự kiện thường niên',
+    };
 
-function setTypeFilter(type, el) {
-  typeFilter = type;
-  document.querySelectorAll('#type-filter .ftab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderExplore();
-}
+    const MODE_MAP = {
+      '97695df4-4d69-4a01-904c-f4c80aa8f0d9': 'Online',
+      '9fd0eac3-7f86-46cd-b7cb-cb9bf92dbb0b': 'Offline',
+      'f1a2b3c4-0002-0002-0002-000000000001': 'Hybrid',
+    };
 
-function toggleSkill(skill, el) {
-  if (skillFilters.includes(skill)) {
-    skillFilters = skillFilters.filter(s => s !== skill);
-    el.classList.remove('active');
-  } else {
-    skillFilters.push(skill);
-    el.classList.add('active');
-  }
-  renderExplore();
-}
+    const MUCDRL_MAP = {
+      'a45df4dc-3e1d-4193-9ba4-f893d6cd3dc4': '3.1',
+      '459fd61b-b6b9-4144-838b-553d69fef02d': '3.2',
+      'f1a2b3c4-0003-0003-0003-000000000001': '1.1',
+      'f1a2b3c4-0003-0003-0003-000000000002': '0',
+    };
 
-function toggleDrlChip(drl, el) {
-  if (drlFilters.includes(drl)) {
-    drlFilters = drlFilters.filter(d => d !== drl);
-    el.classList.remove('active');
-  } else {
-    drlFilters.push(drl);
-    el.classList.add('active');
-  }
-  renderExplore();
-}
+    const DRL_DESCS = {
+      '1.1': 'Mục 1.1: Đánh giá ý thức học tập, nghiên cứu và bồi dưỡng rèn luyện môn học cấp trường.',
+      '3.1': 'Mục 3.1: Tham gia các hoạt động Đoàn, Hội, Đội, CLB hữu ích nhằm rèn luyện phẩm chất.',
+      '3.2': 'Mục 3.2: Hoạt động xã hội, nhân đạo, tình nguyện vì cộng đồng từ trung ương đến địa phương.',
+      '0': 'Hoạt động nâng cao tư duy, giao lưu học thuật bổ ích và không cấp Điểm rèn luyện (ĐRL)'
+    };
 
-function setSortMode(mode) { sortMode = mode; renderExplore(); }
+    const POP_SKILLS = [
+      "Thương mại quốc tế", "Tài chính - Kế kiểm", "Marketing", "Phân tích dữ liệu", "Giao tiếp liên văn hóa",
+      "Giải quyết vấn đề", "Tư duy phản biện", "Tư duy sáng tạo",
+      "Nghiên cứu khoa học", "Phát triển dự án", "Kỹ năng giao tiếp", "Làm việc nhóm",
+      "Định hướng nghề nghiệp", "Networking", "Ứng dụng AI thực tế"
+    ];
 
-function renderExplore() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  let list = EVENTS.filter(e => {
-    const matchQ = !q || e.name.toLowerCase().includes(q) || e.club.toLowerCase().includes(q) || (e.skills || []).some(s => s.toLowerCase().includes(q));
-    const matchType = typeFilter === 'all' || e.type === typeFilter;
-    const matchSkill = skillFilters.length === 0 || skillFilters.some(s => (e.skills || []).includes(s));
-    const matchDRL = drlFilters.length === 0 || drlFilters.some(d => {
-      if (d === 'Không ĐRL') return !e.mucDRL || e.mucDRL === '0';
-      return 'Mục ' + e.mucDRL === d;
+    // Helper functions for parsing
+    function mapField(val, mapping) {
+      if (!val) return '';
+      const t = val.trim();
+      const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (UUID_RE.test(t)) return mapping[t] || val;
+      return val;
+    }
+
+    function convertDriveLink(url) {
+      if (!url) return '';
+      const match = url.match(/\/d\/(.*?)(\/|$)/);
+      if (match && match[1] && url.includes('drive.google.com')) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}`;
+      }
+      return url;
+    }
+
+    function removeAccents(str) {
+      if (!str) return '';
+      return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .toLowerCase();
+    }
+
+    function formatVNDate(str) {
+      if (!str) return 'Chưa có';
+      const d = new Date(str);
+      return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+    }
+
+    function getDaysLeft(str) {
+      if (!str) return -999;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const target = new Date(str); target.setHours(0,0,0,0);
+      return Math.round((target.getTime() - today.getTime()) / 86400000);
+    }
+
+    // ══════════════════════════════════════════
+    //   STATE MANAGEMENT VIA ES6 PROXY
+    // ══════════════════════════════════════════
+    const rawState = {
+      events: [],
+      reviews: [],
+      loading: true,
+      error: null,
+      activeTab: 'home',
+      
+      // Filters
+      selectedHomeType: 'all',
+      selectedExploreType: 'all',
+      selectedSkills: [],
+      selectedDrls: [],
+      sortMode: 'date',
+      currentDrlMuc: '3.1',
+      selectedReviewId: null,
+      
+      // Calendar parameters
+      calYear: new Date().getFullYear(),
+      calMonth: new Date().getMonth(),
+      selectedCalDay: new Date().getDate(),
+      
+      // Search
+      searchQuery: '',
+      
+      // UI modals
+      selectedEventId: null,
+      showRefreshToast: false,
+      pendingSyncData: null,
+      bgSyncing: false
+    };
+
+    // Advanced local cache parser
+    function parseData(eventsRaw, reviewsRaw) {
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+      const parsedEvents = eventsRaw.map(e => {
+        let mappedType = mapField(e.type, TYPE_MAP);
+        let mappedMode = mapField(e.mode, MODE_MAP);
+        let mappedMuc = mapField(e.mucDRL, MUCDRL_MAP);
+        if (!mappedMuc || mappedMuc === '') mappedMuc = '0';
+
+        let poster = e.POSTER ? convertDriveLink(e.POSTER) : '';
+
+        let status = 'open';
+        if (e.date < todayStr) status = 'ended';
+        else if (e.deadline < todayStr) status = 'closed';
+
+        // safely map skills
+        let skillsList = [];
+        if (Array.isArray(e.skills)) skillsList = e.skills;
+        else if (typeof e.skills === 'string') {
+          try {
+            if (e.skills.startsWith('[') && e.skills.endsWith(']')) {
+              skillsList = JSON.parse(e.skills);
+            } else {
+              skillsList = e.skills.split(',').map(s => s.trim()).filter(Boolean);
+            }
+          } catch {
+            skillsList = e.skills.split(',').map(s => s.trim()).filter(Boolean);
+          }
+        }
+
+        return {
+          id: Number(e.id),
+          name: e.name || 'Sự kiện không tên',
+          type: mappedType,
+          mode: mappedMode,
+          date: e.date,
+          time: e.time || 'Cả ngày',
+          club: e.club || 'Ban hoạt động',
+          location: e.location,
+          deadline: e.deadline,
+          link: e.link,
+          POSTER: poster,
+          desc: e.desc,
+          emoji: e.emoji || '🎓',
+          color: e.color || '#fdf0f2',
+          diemDRL: Number(e.diemDRL || 0),
+          mucDRL: mappedMuc,
+          skills: skillsList,
+          rating: Number(e.rating || 0),
+          reviewCount: Number(e.reviewCount || 0),
+          status
+        };
+      });
+
+      const parsedReviews = reviewsRaw.map(r => {
+        const getValArray = (val) => {
+          if (Array.isArray(val)) return val;
+          if (typeof val === 'string') {
+            try {
+              if (val.startsWith('[') && val.endsWith(']')) return JSON.parse(val);
+              return val.split(',').map(s => s.trim()).filter(Boolean);
+            } catch {
+              return val.split(',').map(s => s.trim()).filter(Boolean);
+            }
+          }
+          return [];
+        };
+
+        return {
+          id: Number(r.id),
+          eventId: Number(r.eventId),
+          user: r.user || 'Ẩn danh',
+          orgStars: Number(r.orgStars || 5),
+          takeaway: r.takeaway || '',
+          tagsPos: getValArray(r.tagsPos),
+          tagsNeg: getValArray(r.tagsNeg)
+        };
+      });
+
+      return { events: parsedEvents, reviews: parsedReviews };
+    }
+
+    const stateHandler = {
+      set(target, property, value) {
+        target[property] = value;
+        // Trigger smart DOM updates depending on what changed
+        if (['events', 'reviews', 'loading', 'activeTab', 'selectedHomeType', 'selectedExploreType', 'selectedSkills', 'selectedDrls', 'sortMode', 'currentDrlMuc', 'selectedReviewId', 'searchQuery', 'calYear', 'calMonth', 'selectedCalDay', 'error'].includes(property)) {
+          renderApp();
+        }
+        if (property === 'selectedEventId') {
+          renderModal();
+        }
+        if (property === 'showRefreshToast') {
+          toggleToast();
+        }
+        return true;
+      }
+    };
+
+    const state = new Proxy(rawState, stateHandler);
+
+    // ══════════════════════════════════════════
+    //   FUZZY SEARCH ALGORITHM
+    // ══════════════════════════════════════════
+    function fuzzyMatch(event, query) {
+      if (!query) return true;
+      const q = removeAccents(query).trim();
+      if (!q) return true;
+      const tokens = q.split(/\s+/);
+      const searchTarget = removeAccents(`${event.name} ${event.club} ${event.type} ${event.desc || ''} ${event.skills.join(' ')}`);
+      return tokens.every(t => searchTarget.includes(t));
+    }
+
+    // Debounce decorator
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // ══════════════════════════════════════════
+    //   DATA REST & CACHING PIPELINE
+    // ══════════════════════════════════════════
+    async function loadResources(isForce = false) {
+      // Try local cache
+      const rawCache = localStorage.getItem(CACHE_KEY);
+      let cacheAgeValid = false;
+
+      if (rawCache && !isForce) {
+        try {
+          const cache = JSON.parse(rawCache);
+          const age = Date.now() - cache.timestamp;
+          if (age < TTL) {
+            state.events = cache.events;
+            state.reviews = cache.reviews;
+            state.loading = false;
+            cacheAgeValid = true;
+          }
+        } catch (e) {
+          console.warn('Discarding malformed cache.');
+        }
+      }
+
+      if (!cacheAgeValid) {
+        state.loading = true;
+      }
+
+      try {
+        const [evRes, rvRes] = await Promise.all([
+          fetch(`${API_URL}?action=getEvents&t=${Date.now()}`),
+          fetch(`${API_URL}?action=getReviews&t=${Date.now()}`)
+        ]);
+
+        if (!evRes.ok || !rvRes.ok) throw new Error();
+
+        const rawEvents = await evRes.json();
+        const rawReviews = await rvRes.json();
+        const fresh = parseData(rawEvents, rawReviews);
+
+        if (cacheAgeValid) {
+          // Compare with current states
+          const currentEIds = state.events.map(e => `${e.id}-${e.status}-${e.rating}`).join(',');
+          const freshEIds = fresh.events.map(e => `${e.id}-${e.status}-${e.rating}`).join(',');
+
+          if (currentEIds !== freshEIds || state.reviews.length !== fresh.reviews.length) {
+            state.pendingSyncData = fresh;
+            state.showRefreshToast = true;
+          }
+        } else {
+          state.events = fresh.events;
+          state.reviews = fresh.reviews;
+          state.loading = false;
+          
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
+            timestamp: Date.now(),
+            events: fresh.events,
+            reviews: fresh.reviews
+          }));
+        }
+        state.error = null;
+      } catch (err) {
+        console.error('Fetch error:', err);
+        if (!cacheAgeValid) {
+          state.error = "Không thể liên kết máy chủ. Vui lòng kiểm tra lại kết nối mạng của bạn.";
+          state.loading = false;
+        }
+      }
+    }
+
+    // ══════════════════════════════════════════
+    //   LIGHT & DARK MODE ENGINE
+    // ══════════════════════════════════════════
+    function initTheme() {
+      const savedTheme = localStorage.getItem('ftu_theme_mode');
+      const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('ftu_theme_mode', isDark ? 'dark' : 'light');
     });
-    return matchQ && matchType && matchSkill && matchDRL;
-  });
 
-  if (sortMode === 'date') list.sort((a,b) => a.date.localeCompare(b.date));
-  else if (sortMode === 'rating') list.sort((a,b) => (b.rating||0) - (a.rating||0));
-  else if (sortMode === 'drl') list.sort((a,b) => (b.diemDRL||0) - (a.diemDRL||0));
+    // ══════════════════════════════════════════
+    //   DYNAMIC UI VIEW RENDERING
+    // ══════════════════════════════════════════
+    const viewport = document.getElementById('app-viewport');
 
-  document.getElementById('results-count').textContent = list.length + ' sự kiện phù hợp';
+    function renderApp() {
+      if (state.error) {
+        renderError();
+        return;
+      }
+      if (state.loading) {
+        renderLoading();
+        return;
+      }
 
-  if (list.length === 0) {
-    document.getElementById('explore-list').innerHTML = `
-      <div class="empty-state"><div class="big"></div><p>Không tìm thấy sự kiện phù hợp.<br>Thử điều chỉnh bộ lọc nhé!</p></div>
-    `;
-    return;
-  }
-
-  document.getElementById('explore-list').innerHTML = list.map(e => `
-    <div class="event-row" onclick="openModal(${e.id})">
-      <div class="er-top">
-        <div class="er-title">${e.emoji || ''} ${e.name}</div>
-        ${e.mucDRL && e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : ''}
-      </div>
-      <div class="er-meta">${formatDate(e.date)} ${e.time} &nbsp;|&nbsp; ${e.club} &nbsp;|&nbsp; ${e.mode === 'Online' ? ' Online' : ' ' + (e.location || '')}</div>
-      <div class="er-tags">
-        ${statusBadge(e.status)}
-        ${(e.skills || []).map(s => `<span class="tag tag-green">${s}</span>`).join('')}
-        <span class="tag tag-gray">${e.type || ''}</span>
-      </div>
-      ${e.rating > 0 ? `<div class="er-stars"> ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
-    </div>
-  `).join('');
-}
-
-// ══════════════════════════════════════════
-//   CALENDAR
-// ══════════════════════════════════════════
-const MONTH_NAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
-
-function changeMonth(dir) {
-  calMonth += dir;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  if (calMonth < 0)  { calMonth = 11; calYear--; }
-  selectedCalDay = null;
-  renderCalendar();
-}
-
-function renderCalendar() {
-  const today = new Date();
-  document.getElementById('cal-month-label').textContent = MONTH_NAMES[calMonth] + ' ' + calYear;
-
-  const firstDay = new Date(calYear, calMonth, 1);
-  let startDow = firstDay.getDay();
-  startDow = startDow === 0 ? 6 : startDow - 1;
-
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
-
-  const eventDays = {};
-  EVENTS.forEach(e => {
-    const d = new Date(e.date);
-    if (d.getFullYear() === calYear && d.getMonth() === calMonth) {
-      const day = d.getDate();
-      if (!eventDays[day]) eventDays[day] = [];
-      eventDays[day].push(e);
-    }
-  });
-
-  let html = '';
-  for (let i = startDow - 1; i >= 0; i--) {
-    html += `<div class="cal-day other-month"><span>${daysInPrev - i}</span></div>`;
-  }
-  for (let d = 1; d <= daysInMonth; d++) {
-    const isToday    = today.getDate() === d && today.getMonth() === calMonth && today.getFullYear() === calYear;
-    const hasEvent   = !!eventDays[d];
-    const isSelected = selectedCalDay === d;
-    let cls = 'cal-day';
-    if (isToday)    cls += ' today';
-    else if (hasEvent) cls += ' has-event';
-    if (isSelected) cls += ' selected';
-
-    let eventsHtml = '';
-    if (hasEvent) {
-      eventsHtml = eventDays[d].map(e => {
-        const bgColor  = isToday ? 'rgba(255,255,255,0.2)' : 'rgba(200,16,46,0.1)';
-        const txtColor = isToday ? '#ffffff' : '#c8102e';
-        return `<div style="font-size:9px;font-weight:600;background:${bgColor};color:${txtColor};
-          padding:2px 4px;border-radius:4px;margin-top:3px;width:90%;
-          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;">${e.name}</div>`;
-      }).join('');
+      switch (state.activeTab) {
+        case 'home':
+          renderHome();
+          break;
+        case 'explore':
+          renderExplore();
+          break;
+        case 'calendar':
+          renderCalendar();
+          break;
+        case 'review':
+          renderReview();
+          break;
+        case 'drl':
+          renderDrl();
+          break;
+      }
+      lucide.createIcons();
     }
 
-    html += `<div class="${cls}" onclick="selectCalDay(${d})" style="justify-content:flex-start;padding-top:6px;">
-      <span style="margin-bottom:2px;">${d}</span>
-      ${eventsHtml}
-    </div>`;
-  }
-
-  const total     = startDow + daysInMonth;
-  const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
-  for (let i = 1; i <= remaining; i++) {
-    html += `<div class="cal-day other-month"><span>${i}</span></div>`;
-  }
-
-  document.getElementById('cal-days').innerHTML = html;
-  if (selectedCalDay) selectCalDay(selectedCalDay);
-}
-
-function selectCalDay(day) {
-  selectedCalDay = day;
-  const dayEvents = EVENTS.filter(e => {
-    const d = new Date(e.date);
-    return d.getFullYear() === calYear && d.getMonth() === calMonth && d.getDate() === day;
-  });
-
-  document.getElementById('cal-selected-title').textContent =
-    `${day} tháng ${calMonth+1}, ${calYear} — ${dayEvents.length > 0 ? dayEvents.length + ' sự kiện' : 'Không có sự kiện'}`;
-
-  document.getElementById('cal-day-events').innerHTML = dayEvents.length === 0
-    ? `<div style="color:#9ca3af;font-size:12px;padding:8px 0">Không có sự kiện trong ngày này</div>`
-    : dayEvents.map(e => `
-      <div class="event-row" onclick="openModal(${e.id})" style="margin-bottom:8px">
-        <div class="er-top">
-          <div class="er-title">${e.emoji || ''} ${e.name}</div>
-          ${e.mucDRL && e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL} · ${e.diemDRL}đ</span>` : ''}
+    function renderLoading() {
+      viewport.innerHTML = `
+        <div class="flex flex-col items-center justify-center p-8 space-y-4 h-[70vh] text-center select-none">
+          <div class="w-12 h-12 rounded-full border-3 border-[#c8102e]/10 border-t-brand-red animate-spin"></div>
+          <p class="text-xs font-bold text-slate-700 dark:text-slate-200">FTU Event Hub</p>
+          <p class="text-[10px] tracking-wide text-slate-400 dark:text-slate-500 uppercase font-black">Một chạm kết nối nguồn lực...</p>
         </div>
-        <div class="er-meta">${e.time} &nbsp;|&nbsp; ${e.club}</div>
-        <div class="er-tags">${(e.skills || []).map(s=>`<span class="tag tag-green">${s}</span>`).join('')}</div>
-      </div>
-    `).join('');
+      `;
+    }
 
-  renderCalendar();
-}
-
-// ══════════════════════════════════════════
-//   REVIEW
-// ══════════════════════════════════════════
-function getClubReputation() {
-  const clubMap = {};
-  REVIEWS.forEach(r => {
-    const ev = EVENTS.find(e => e.id === r.eventId);
-    if (!ev) return;
-    if (!clubMap[ev.club]) clubMap[ev.club] = { stars: [], eventIds: new Set() };
-    clubMap[ev.club].stars.push(r.orgStars);
-    clubMap[ev.club].eventIds.add(ev.id);
-  });
-  return Object.entries(clubMap).map(([club, data]) => ({
-    club,
-    avg: (data.stars.reduce((s,v) => s+v, 0) / data.stars.length),
-    reviewCount: data.stars.length,
-    eventCount: data.eventIds.size,
-  })).sort((a,b) => b.avg - a.avg);
-}
-
-function starBar(avg) {
-  const full = Math.floor(avg);
-  const half = avg - full >= 0.4;
-  let s = '';
-  for (let i = 0; i < 5; i++) {
-    if (i < full) s += '<span style="color:#c8102e">★</span>';
-    else if (i === full && half) s += '<span style="color:#c8102e;opacity:.5">★</span>';
-    else s += '<span style="color:#e5e7eb">★</span>';
-  }
-  return s;
-}
-
-function renderReview() {
-  const reviewedEvents = EVENTS.filter(e => REVIEWS.some(r => r.eventId === e.id));
-  if (!selectedReviewEvent) selectedReviewEvent = reviewedEvents[0]?.id;
-
-  const reps = getClubReputation();
-  document.getElementById('club-reputation-list').innerHTML = reps.map(rep => `
-    <div style="background:#fff;border:1px solid #f3f4f6;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;gap:12px">
-      <div style="font-size:26px;flex-shrink:0"></div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:#1f2937;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${rep.club}</div>
-        <div style="font-size:11px;color:#6b7280">${rep.eventCount} sự kiện · ${rep.reviewCount} đánh giá</div>
-      </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div style="font-size:18px;font-weight:800;color:#9b0c22;line-height:1">${rep.avg.toFixed(1)}</div>
-        <div style="font-size:12px;letter-spacing:-1px">${starBar(rep.avg)}</div>
-        <div style="font-size:10px;color:#9ca3af;margin-top:1px">uy tín tổ chức</div>
-      </div>
-    </div>
-  `).join('');
-
-  document.getElementById('review-event-pills').innerHTML = reviewedEvents.map(e => `
-    <button class="evpill ${selectedReviewEvent === e.id ? 'active' : ''}" onclick="selectReviewEvent(${e.id})">${e.name.length > 32 ? e.name.substring(0,30)+'…' : e.name}</button>
-  `).join('');
-
-  renderReviewContent();
-}
-
-function selectReviewEvent(id) {
-  selectedReviewEvent = id;
-  renderReview();
-}
-
-function renderReviewContent() {
-  const ev = EVENTS.find(e => e.id === selectedReviewEvent);
-  const evReviews = REVIEWS.filter(r => r.eventId === selectedReviewEvent);
-  if (!ev || evReviews.length === 0) return;
-
-  const avgOrg = (evReviews.reduce((s,r) => s + r.orgStars, 0) / evReviews.length).toFixed(1);
-  const starCounts = [5,4,3,2,1].map(s => evReviews.filter(r => r.orgStars === s).length);
-
-  document.getElementById('score-card').innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-      <span style="font-size:20px">${ev.emoji || ''}</span>
-      <div>
-        <div class="score-title" style="margin:0">${ev.name}</div>
-        <div style="font-size:11px;color:#9ca3af">do ${ev.club} tổ chức</div>
-      </div>
-    </div>
-    <div style="font-size:10px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">Điểm khâu tổ chức (đúng giờ, không gian, âm thanh)</div>
-    <div class="score-main">
-      <div>
-        <div class="big-score">${avgOrg}</div>
-        <div style="font-size:14px;letter-spacing:-1px;margin-top:3px">${starBar(parseFloat(avgOrg))}</div>
-        <div class="score-count">${evReviews.length} đánh giá</div>
-      </div>
-      <div class="score-bars">
-        ${[5,4,3,2,1].map((s,i) => `
-          <div class="bar-row">
-            <span>${s}</span>
-            <div class="bar-track"><div class="bar-fill" style="width:${evReviews.length > 0 ? (starCounts[i]/evReviews.length*100) : 0}%"></div></div>
-            <span style="min-width:16px">${starCounts[i]}</span>
+    function renderError() {
+      viewport.innerHTML = `
+        <div class="flex flex-col items-center justify-center p-8 h-[70vh] text-center space-y-4 select-none">
+          <div class="w-14 h-14 bg-red-50 dark:bg-rose-950/20 text-brand-red rounded-full flex items-center justify-center">
+            <i data-lucide="alert-circle" class="w-8 h-8"></i>
           </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-
-  document.getElementById('reviews-list').innerHTML = `
-    <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;padding:0 0 6px">Key Takeaways từ người tham gia</div>
-    ${evReviews.map(r => `
-      <div class="rcard">
-        <div class="rc-top">
-          <span class="rc-user">${r.user}</span>
-          <span style="font-size:11px;color:#6b7280">Tổ chức: ${starBar(r.orgStars)} ${r.orgStars}★</span>
-        </div>
-        <div style="background:#fdf0f2;border-left:3px solid #c8102e;border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:8px;font-size:12px;color:#374151;line-height:1.6">
-          <span style="font-size:10px;font-weight:700;color:#9b0c22;display:block;margin-bottom:4px">BÀI HỌC TÂM ĐẮC</span>
-          ${r.takeaway}
-        </div>
-        <div class="rc-tags">
-          ${(r.tagsPos || []).map(t => `<span class="tag tag-green">${t}</span>`).join('')}
-          ${(r.tagsNeg || []).map(t => `<span class="tag tag-red">${t}</span>`).join('')}
-        </div>
-      </div>
-    `).join('')}
-  `;
-}
-
-// ══════════════════════════════════════════
-//   DRL
-// ══════════════════════════════════════════
-const DRL_DESCS = {
-  '1.1': 'Mục 1.1 Kết quả học tập & Nghiên cứu khoa học',
-  '3.1': 'Mục 3.1 Tham gia hoạt động đoàn thể, CLB',
-  '3.2': 'Mục 3.2 Hoạt động xã hội & Tình nguyện',
-  '0': 'Sự kiện không cộng ĐRL'
-};
-
-function setDrlMuc(muc, el) {
-  currentDrlMuc = muc;
-  document.querySelectorAll('.drl-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderDRL();
-}
-
-function renderDRL() {
-  document.getElementById('drl-muc-desc').textContent = DRL_DESCS[currentDrlMuc] || '';
-  const list = EVENTS
-    .filter(e => String(e.mucDRL) === String(currentDrlMuc))
-    .sort((a,b) => daysUntil(a.deadline) - daysUntil(b.deadline));
-
-  if (list.length === 0) {
-    document.getElementById('drl-list').innerHTML = `<div class="empty-state"><div class="big"></div><p>Chưa có sự kiện cho mục này.<br>Cập nhật sớm!</p></div>`;
-    return;
-  }
-
-  document.getElementById('drl-list').innerHTML = list.map(e => {
-    const days = daysUntil(e.deadline);
-    const urgentClass = days <= 3 ? 'deadline-soon' : '';
-    const urgentText  = days < 0 ? 'Đã hết hạn' : days === 0 ? 'Hết hạn hôm nay' : `Còn ${days} ngày`;
-    return `
-      <div class="drl-item" onclick="openModal(${e.id})">
-        <div class="drl-item-top">
           <div>
-            ${e.mucDRL && e.mucDRL !== '0' ? `<div class="drl-muc-badge">MỤC ${e.mucDRL} — ${(DRL_DESCS[e.mucDRL] || '').split('—')[1]?.trim() || ''}</div>` : ''}
-            <div class="drl-item-name">${e.emoji || ''} ${e.name}</div>
+            <h3 class="font-bold text-slate-800 dark:text-slate-200 text-sm">Kết nối không thành công</h3>
+            <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">${state.error}</p>
           </div>
-          <div class="drl-pts">${e.diemDRL > 0 ? e.diemDRL + 'đ' : '—'}</div>
+          <button onclick="loadResources(true)" class="px-4 py-2.5 bg-brand-red text-white text-xs font-bold rounded-xl active:scale-95 transition-all cursor-pointer">
+            Thử tải lại tài nguyên
+          </button>
         </div>
-        <div class="drl-item-meta">
-          ${e.club} &nbsp;·&nbsp; ${formatDate(e.date)}
-          &nbsp;·&nbsp; <span class="${urgentClass}">Đăng ký: ${urgentText}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// ══════════════════════════════════════════
-//   MODAL
-// ══════════════════════════════════════════
-function openModal(id) {
-  const e = EVENTS.find(ev => ev.id === id);
-  if (!e) return;
-  const days = daysUntil(e.deadline);
-  const canRegister = e.status === 'open';
-  const reviewsForEvent = REVIEWS.filter(r => r.eventId === e.id);
-
-  document.getElementById('modal-body').innerHTML = `
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-event-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
-      ${posterInner(e)}
-    </div>
-    <div class="modal-title">${e.name}</div>
-    <div class="modal-tags">
-      ${statusBadge(e.status)}
-      <span class="tag tag-gray">${e.type || ''}</span>
-      ${e.mucDRL && e.mucDRL !== '0' ? `<span class="tag tag-blue">Mục ${e.mucDRL} ĐRL · ${e.diemDRL} điểm</span>` : '<span class="tag tag-gray">Không cộng ĐRL</span>'}
-      ${(e.skills || []).map(s=>`<span class="tag tag-green">${s}</span>`).join('')}
-    </div>
-    <div class="modal-info">
-      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Thời gian</div><div class="modal-info-val">${formatDate(e.date)}, ${e.time}</div></div></div>
-      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Địa điểm</div><div class="modal-info-val">${e.location || (e.mode === 'Online' ? 'Online' : 'TBA')}</div></div></div>
-      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Đơn vị tổ chức</div><div class="modal-info-val">${e.club}</div></div></div>
-      ${canRegister ? `<div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Deadline đăng ký</div><div class="modal-info-val ${days <= 3 && days >= 0 ? 'deadline-soon' : ''}">${formatDate(e.deadline)} ${days >= 0 ? '(còn ' + days + ' ngày)' : '(đã qua)'}</div></div></div>` : ''}
-      ${e.rating > 0 ? `<div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Đánh giá từ sinh viên</div><div class="modal-info-val">${e.rating}/5 · ${e.reviewCount} review</div></div></div>` : ''}
-    </div>
-    ${e.desc ? `<div class="modal-desc">${e.desc}</div>` : ''}
-    ${reviewsForEvent.length > 0 ? `
-      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">Review từ người đã tham gia</div>
-      ${reviewsForEvent.slice(0,2).map(r=>`
-        <div style="background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid #e5e7eb">
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-            <span style="font-size:11px;font-weight:600;color:#374151">${r.user}</span>
-            <span style="font-size:11px;color:#f59e0b">${''.repeat(r.orgStars)}</span>
-          </div>
-          <div style="font-size:12px;color:#4b5563;line-height:1.5">${r.takeaway}</div>
-        </div>
-      `).join('')}
-    ` : ''}
-    ${canRegister && e.link
-      ? `<button class="modal-btn" onclick="window.open('${e.link}', '_blank')">Đăng ký tham gia </button>`
-      : `<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:10px;font-size:13px;color:#64748b">${e.status === 'ended' ? 'Sự kiện đã kết thúc' : 'Đã đóng đơn đăng ký'}</div>`
+      `;
     }
-  `;
 
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+    // ── VÀO TRANG CHỦ ──
+    function renderHome() {
+      const up = state.events.filter(e => {
+        const d = new Date(e.date); d.setHours(0,0,0,0);
+        const t = new Date(); t.setHours(0,0,0,0);
+        return d >= t;
+      });
+      const uniqueClubs = new Set(state.events.map(e => e.club)).size;
 
-function closeModal(e) {
-  if (e && e.target !== document.getElementById('modal-overlay')) return;
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
+      let upList = state.events.filter(e => e.status !== 'ended');
+      if (state.selectedHomeType !== 'all') {
+        upList = upList.filter(e => e.type === state.selectedHomeType);
+      }
+      upList.sort((a,b) => a.date.localeCompare(b.date));
 
-// ══════════════════════════════════════════
-//   UTILS
-// ══════════════════════════════════════════
-function formatDate(str) {
-  if (!str) return '';
-  const d = new Date(str);
-  return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
-}
+      const homeTabs = [
+        { value: 'all', label: 'Tất cả' },
+        { value: 'Talkshow', label: 'Talkshow' },
+        { value: 'Workshop', label: 'Workshop' },
+        { value: 'Tình nguyện', label: 'Tình nguyện' },
+        { value: 'Cuộc thi', label: 'Cuộc thi' }
+      ];
 
-function daysUntil(str) {
-  if (!str) return -999;
-  const today  = new Date(); today.setHours(0,0,0,0);
-  const target = new Date(str); target.setHours(0,0,0,0);
-  return Math.round((target - today) / 86400000);
-}
+      viewport.innerHTML = `
+        <div class="space-y-6 pb-4">
+          <!-- Crimson Glass Banner Block -->
+          <div class="relative overflow-hidden bg-gradient-to-br from-[#1d4ed8]/5 via-[#c8102e]/10 to-[#9b0c22]/15 text-slate-900 dark:text-white px-5 sm:px-8 py-8 sm:py-10 rounded-b-[2rem] border-b border-white/20 dark:border-white/5 backdrop-blur-md">
+            
+            <button onclick="loadResources(true)" class="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-brand-red/10 dark:bg-white/5 hover:bg-brand-red/20 text-brand-red dark:text-white/95 border border-brand-red-mid/20 dark:border-white/10 rounded-xl text-[10px] font-bold cursor-pointer transition-all">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> Tải lại
+            </button>
 
-// ══════════════════════════════════════════
-//   INIT
-// ══════════════════════════════════════════
-(async function init() {
-  const today = new Date();
-  calYear  = today.getFullYear();
-  calMonth = today.getMonth();
+            <div class="inline-flex items-center gap-1 px-3 py-1 bg-brand-red-light dark:bg-brand-red/20 text-brand-red dark:text-rose-400 border border-brand-red-mid/30 dark:border-brand-red-dark/30 rounded-full text-[10px] font-black uppercase tracking-wider mb-4">
+              🎓 FTU Event Hub
+            </div>
 
-  const ok = await loadData();
-  if (ok) {
-    renderHome();
-    initExplore();
-    renderExplore();
-  }
-})();
-</script>
+            <div class="flex items-center gap-3.5 mb-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-lg transform rotate-[-2deg]">
+                <img src="https://raw.githubusercontent.com/ftu-event-hub/ftu-event-hub/main/ftu.png" alt="FTU" class="w-8 h-8 object-contain">
+              </div>
+              <h1 class="font-display font-black text-xl sm:text-2xl tracking-normal text-slate-800 dark:text-white">
+                Sự kiện ngoại khóa FTU
+              </h1>
+            </div>
+
+            <p class="text-xs text-slate-500 dark:text-slate-350 leading-relaxed max-w-sm mb-6">
+              Nền tảng tổng hợp toàn bộ hoạt động ngoại khóa, talkshow, cuộc thi chất lượng có cộng ĐRL, đồng bộ liên tục 15p một lần.
+            </p>
+
+            <div class="flex gap-1.5 overflow-x-auto scrollbar-none">
+              ${homeTabs.map(t => `
+                <button onclick="state.selectedHomeType='${t.value}'" class="px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
+                  state.selectedHomeType === t.value
+                    ? 'bg-brand-red text-white border-brand-red shadow-sm'
+                    : 'bg-white/80 dark:bg-slate-800/40 border-slate-200/50 dark:border-white/5 text-slate-500 dark:text-slate-400'
+                }">${t.label}</button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Basic Stats Indicators -->
+          <div class="px-4 grid grid-cols-3 gap-3">
+            <div class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-800/80 rounded-2xl p-4 text-center soft-shadow relative">
+              <div class="text-xl font-black text-brand-red">${up.length}</div>
+              <div class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase mt-1">Sắp diễn ra</div>
+            </div>
+            <div class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-800/80 rounded-2xl p-4 text-center soft-shadow relative">
+              <div class="text-xl font-black text-blue-600 dark:text-blue-400">${uniqueClubs}</div>
+              <div class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase mt-1">CLB Tổ chức</div>
+            </div>
+            <div class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-800/80 rounded-2xl p-4 text-center soft-shadow relative">
+              <div class="text-xl font-black text-emerald-600">${state.reviews.length}</div>
+              <div class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase mt-1">Lượt review</div>
+            </div>
+          </div>
+
+          <!-- Feature Listing Section Grid -->
+          <div class="px-4 space-y-3.5">
+            <div class="flex justify-between items-center">
+              <h2 class="text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-4 h-4 text-brand-red animate-pulse"></i> Sự kiện tiêu biểu
+              </h2>
+              <button onclick="state.activeTab='explore'" class="text-xs text-brand-red hover:underline font-extrabold cursor-pointer">
+                Xem tất cả →
+              </button>
+            </div>
+
+            ${upList.length === 0 ? `
+              <div class="text-center py-12 bg-white/40 dark:bg-slate-900/20 border border-slate-200/40 dark:border-slate-800 rounded-2xl p-4 text-slate-400 text-xs">
+                Hiện không có hoạt động sắp diễn ra cho mục đã chọn.
+              </div>
+            ` : `
+              <div class="grid grid-cols-2 gap-3">
+                ${upList.slice(0, 4).map(e => `
+                  <div onclick="state.selectedEventId=${e.id}" class="bg-white/50 dark:bg-slate-900/50 rounded-2xl border border-slate-200/30 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col h-full group">
+                    <div class="h-28 relative flex-shrink-0 bg-slate-100 dark:bg-slate-800">
+                      ${renderImgBlock(e)}
+                    </div>
+                    <div class="p-3 flex flex-col justify-between flex-grow space-y-2">
+                      <div>
+                        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 line-clamp-2 leading-snug group-hover:text-brand-red transition-colors">
+                          ${e.emoji} ${e.name}
+                        </h3>
+                        <p class="text-[9px] text-slate-400 font-bold mt-1 max-w-[120px] truncate">
+                          💡 ${e.club}
+                        </p>
+                      </div>
+
+                      <div class="space-y-1.5 pt-2 border-t border-slate-50 dark:border-slate-850">
+                        <div class="text-[9px] text-slate-400 dark:text-slate-500 font-bold">
+                          ${formatVNDate(e.date)}
+                        </div>
+                        <div class="flex gap-1 flex-wrap">
+                          ${e.mucDRL && e.mucDRL !== '0' ? `
+                            <span class="text-[8px] font-bold bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 px-1 py-0.5 rounded">
+                              +${e.diemDRL}đ ĐRL
+                            </span>
+                          ` : `
+                            <span class="text-[8px] bg-slate-100 dark:bg-slate-800 text-slate-400 px-1 py-0.5 rounded">
+                              Không ĐRL
+                            </span>
+                          `}
+                        </div>
+                        ${e.rating > 0 ? `
+                          <div class="flex items-center gap-1.5 text-[9px] text-amber-500 font-bold">
+                            <i data-lucide="star" class="w-2.5 h-2.5 fill-amber-500"></i> ${e.rating} · ${e.reviewCount} đánh giá
+                          </div>
+                        `: ''}
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+
+          <!-- Quick Access Cards list -->
+          <div class="px-4 space-y-3">
+            <h3 class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Truy cập nhanh</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div onclick="state.activeTab='explore'" class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-850 p-4 rounded-2xl flex items-center gap-3 cursor-pointer hover:-translate-y-0.5 transition-all shadow-xs">
+                <span class="text-lg">🔍</span>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100">Tìm kiếm</h4>
+                  <p class="text-[9px] text-slate-400 dark:text-slate-500 font-semibold mt-0.5">Tất cả hoạt động</p>
+                </div>
+              </div>
+
+              <div onclick="state.activeTab='calendar'" class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-850 p-4 rounded-2xl flex items-center gap-3 cursor-pointer hover:-translate-y-0.5 transition-all shadow-xs">
+                <span class="text-lg">📅</span>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100">Lịch tháng</h4>
+                  <p class="text-[9px] text-slate-400 dark:text-slate-500 font-semibold mt-0.5">Xem theo ngày</p>
+                </div>
+              </div>
+
+              <div onclick="state.activeTab='review'" class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-850 p-4 rounded-2xl flex items-center gap-3 cursor-pointer hover:-translate-y-0.5 transition-all shadow-xs">
+                <span class="text-lg">📖</span>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100">Tri thức</h4>
+                  <p class="text-[9px] text-slate-400 dark:text-slate-500 font-semibold mt-0.5">Takeaway & Review</p>
+                </div>
+              </div>
+
+              <div onclick="state.activeTab='drl'" class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-850 p-4 rounded-2xl flex items-center gap-3 cursor-pointer hover:-translate-y-0.5 transition-all shadow-xs">
+                <span class="text-lg">🎯</span>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100">Mục ĐRL</h4>
+                  <p class="text-[9px] text-slate-400 dark:text-slate-500 font-semibold mt-0.5">Cấp rèn luyện chính</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom CTA Action card -->
+          <div class="px-4">
+            <a href="https://tally.so/r/ODoqeR" target="_blank" class="block bg-brand-red-light dark:bg-rose-950/20 border border-brand-red-mid/50 dark:border-rose-900/40 rounded-3xl p-5 cursor-pointer shadow-xs hover:shadow-md transition-all group">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-brand-red text-white flex items-center justify-center font-bold">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-extrabold text-[#9b0c22] dark:text-rose-400">📮 Bạn thuộc BTC sự kiện?</h4>
+                    <p class="text-[9px] text-brand-red dark:text-rose-400/80 mt-0.5">Gửi chương trình của CLB lên Hub ngay</p>
+                  </div>
+                </div>
+                <span class="text-brand-red dark:text-rose-400 font-bold group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── TRANG KHÁM PHÁ ──
+    function renderExplore() {
+      const typeFilters = [
+        { value: 'all', label: 'Tất cả' },
+        { value: 'Talkshow', label: 'Talkshow' },
+        { value: 'Workshop', label: 'Workshop' },
+        { value: 'Cuộc thi', label: 'Cuộc thi' },
+        { value: 'Tình nguyện', label: 'Tình nguyện' },
+        { value: 'Tuyển thành viên', label: 'Tuyển TV' }
+      ];
+
+      const drlOptions = ['Mục 1.1', 'Mục 3.1', 'Mục 3.2', 'Không ĐRL'];
+
+      // filter
+      const filtered = state.events.filter(e => {
+        const matchSearch = fuzzyMatch(e, state.searchQuery);
+        const matchType = state.selectedExploreType === 'all' || e.type === state.selectedExploreType;
+        const matchSkills = state.selectedSkills.length === 0 || state.selectedSkills.some(s => e.skills.includes(s));
+        const matchDrls = state.selectedDrls.length === 0 || state.selectedDrls.some(d => {
+          if (d === 'Không ĐRL') return !e.mucDRL || e.mucDRL === '0';
+          return `Mục ${e.mucDRL}` === d;
+        });
+        return matchSearch && matchType && matchSkills && matchDrls;
+      });
+
+      // sort
+      const sorted = [...filtered].sort((a,b) => {
+        if (state.sortMode === 'date') return a.date.localeCompare(b.date);
+        if (state.sortMode === 'rating') return (b.rating || 0) - (a.rating || 0);
+        if (state.sortMode === 'drl') return (b.diemDRL || 0) - (a.diemDRL || 0);
+        return 0;
+      });
+
+      viewport.innerHTML = `
+        <div class="space-y-4 pb-4">
+          <!-- Translucent Sticky Input Bar -->
+          <div class="bg-white/40 dark:bg-slate-900/30 px-4 pt-5 pb-3 border-b border-slate-200/50 dark:border-slate-800/80 sticky top-0 z-20 glass-nav shadow-xs">
+            <h1 class="text-xl font-extrabold text-slate-900 dark:text-slate-50 flex items-center gap-1.5 mb-4">
+              🔍 Khám phá sự kiện
+            </h1>
+
+            <div class="relative group mb-3">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 transform -translate-y-1/2"></i>
+              <input 
+                id="search-input-field" 
+                type="text" 
+                placeholder="Tìm CLB, chủ đề, bài học kỹ năng..." 
+                value="${state.searchQuery}"
+                class="w-full pl-10 pr-4 py-3 bg-white/60 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 outline-none focus:ring-2 focus:ring-brand-red/10 focus:border-brand-red"
+              />
+            </div>
+
+            <!-- Scroll Tab types -->
+            <div class="flex gap-1.5 overflow-x-auto scrollbar-none">
+              ${typeFilters.map(t => `
+                <button onclick="state.selectedExploreType='${t.value}'" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
+                  state.selectedExploreType === t.value
+                    ? 'bg-brand-red text-white border-brand-red shadow-sm'
+                    : 'bg-white/80 dark:bg-slate-800/30 border-slate-100 dark:border-white/5 text-slate-400 hover:bg-slate-50'
+                }">${t.label}</button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Advanced Filters Chips -->
+          <div class="px-4 space-y-3.5">
+            <div>
+              <h3 class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1 mb-2">
+                <i data-lucide="sliders" class="w-3 h-3 text-brand-red"></i> Kỹ năng phát triển
+              </h3>
+              <div class="flex gap-1.5 overflow-x-auto scrollbar-none">
+                ${POP_SKILLS.map(s => {
+                  const active = state.selectedSkills.includes(s);
+                  return `
+                    <button onclick="toggleFilterArray('selectedSkills', '${s}')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold border whitespace-nowrap cursor-pointer transition-all ${
+                      active
+                        ? 'bg-brand-red-light text-brand-red border-brand-red-mid font-black'
+                        : 'bg-white/80 dark:bg-slate-800/40 text-slate-400 border-slate-100 dark:border-slate-800'
+                    }">${s}</button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1 mb-2">
+                <i data-lucide="award" class="w-3 h-3 text-brand-red"></i> Danh mục ĐRL
+              </h3>
+              <div class="flex gap-1.5">
+                ${drlOptions.map(o => {
+                  const active = state.selectedDrls.includes(o);
+                  return `
+                    <button onclick="toggleFilterArray('selectedDrls', '${o}')" class="px-3.5 py-1.5 rounded-xl text-[10px] font-bold border cursor-pointer transition-all ${
+                      active
+                        ? 'bg-brand-red-light text-brand-red border-brand-red-mid font-black'
+                        : 'bg-white/80 dark:bg-slate-800/40 text-slate-400 border-slate-100 dark:border-slate-800'
+                    }">${o}</button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Count bar -->
+          <div class="px-4 flex justify-between items-center bg-slate-100/40 dark:bg-slate-800/10 py-1.5 border-y border-slate-200/50 dark:border-slate-800 text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
+            <span>Tìm thấy ${sorted.length} sự kiện</span>
+            <div class="flex items-center gap-1">
+              <span>Xếp:</span>
+              <select id="sort-select" class="border-none bg-transparent outline-none focus:ring-0 text-slate-600 dark:text-slate-350 cursor-pointer text-right font-sans font-extrabold uppercase">
+                <option value="date" ${state.sortMode==='date'?'selected':''}>Sắp tới</option>
+                <option value="rating" ${state.sortMode==='rating'?'selected':''}>Sao cao nhất</option>
+                <option value="drl" ${state.sortMode==='drl'?'selected':''}>ĐRL nhiều</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Rows Containers listing -->
+          <div class="px-4 space-y-3.5">
+            ${sorted.length === 0 ? `
+              <div class="text-center py-16 bg-white/40 dark:bg-slate-900/10 border border-slate-200/40 dark:border-slate-800 rounded-3xl p-6 text-slate-400 text-xs">
+                Không có sự kiện nào khớp với tiêu chuẩn của bạn.
+              </div>
+            ` : sorted.map(e => `
+              <div onclick="state.selectedEventId=${e.id}" class="bg-white/50 dark:bg-slate-900/50 border border-slate-200/40 dark:border-slate-800/80 rounded-2xl p-4 soft-shadow hover:border-brand-red-mid transition-all duration-200 cursor-pointer space-y-3 group">
+                <div class="flex justify-between items-start gap-4">
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-brand-red transition-all">
+                    ${e.emoji} ${e.name}
+                  </h3>
+                  ${e.mucDRL && e.mucDRL !== '0' ? `
+                    <span class="text-[9px] font-extrabold bg-blue-50 dark:bg-blue-999/10 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full flex-shrink-0">
+                      Mục ${e.mucDRL} (+${e.diemDRL}đ)
+                    </span>
+                  ` : ''}
+                </div>
+
+                <div class="text-[10px] text-slate-400 font-bold space-y-1 sm:space-y-0 sm:flex sm:items-center sm:gap-3 leading-none">
+                  <span>${formatVNDate(e.date)} · ${e.time}</span>
+                  <span class="hidden sm:inline">|</span>
+                  <span class="truncate max-w-[150px] inline-block"><i data-lucide="landmark" class="w-3 h-3 inline mr-0.5"></i> ${e.club}</span>
+                  <span class="hidden sm:inline">|</span>
+                  <span><i data-lucide="map-pin" class="w-3 h-3 inline mr-0.5"></i> ${e.location || (e.mode === 'Online' ? 'Online' : 'TBA')}</span>
+                </div>
+
+                <div class="flex justify-between items-center gap-2 pt-2 border-t border-slate-100/40">
+                  <div class="flex flex-wrap gap-1">
+                    <span class="text-[8px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-100 px-1.5 py-0.5 rounded">
+                      ${e.status === 'open' ? 'Đang mở' : e.status === 'closed' ? 'Đóng đơn' : 'Kết thúc'}
+                    </span>
+                    ${e.skills.slice(0, 2).map(sk => `
+                      <span class="text-[8px] bg-slate-50 dark:bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${sk}</span>
+                    `).join('')}
+                  </div>
+
+                  ${e.rating > 0 ? `
+                    <div class="flex items-center gap-1 text-[10px] text-amber-500 font-extrabold">
+                      <i data-lucide="star" class="w-3 h-3 fill-amber-500"></i> ${e.rating} (${e.reviewCount})
+                    </div>
+                  `: ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // bind search/sort events
+      const inp = document.getElementById('search-input-field');
+      inp.addEventListener('input', debounce((ev) => {
+        state.searchQuery = ev.target.value;
+      }, 300));
+      
+      // Select cursor maintain
+      inp.focus();
+      inp.setSelectionRange(inp.value.length, inp.value.length);
+
+      document.getElementById('sort-select').addEventListener('change', (ev) => {
+        state.sortMode = ev.target.value;
+      });
+    }
+
+    // Toggle filter list
+    window.toggleFilterArray = function(key, val) {
+      const idx = state[key].indexOf(val);
+      if (idx > -1) {
+        state[key] = state[key].filter(i => i !== val);
+      } else {
+        state[key] = [...state[key], val];
+      }
+    };
+
+    // ── TRANG LỊCH THÁNG ──
+    function renderCalendar() {
+      const first = new Date(state.calYear, state.calMonth, 1);
+      let startOfW = first.getDay();
+      startOfW = startOfW === 0 ? 6 : startOfW - 1;
+
+      const totalDays = new Date(state.calYear, state.calMonth + 1, 0).getDate();
+      const totalPrevDays = new Date(state.calYear, state.calMonth, 0).getDate();
+
+      // Event mapper for day dots
+      const mEvents = {};
+      state.events.forEach(e => {
+        const d = new Date(e.date);
+        if (d.getFullYear() === state.calYear && d.getMonth() === state.calMonth) {
+          const day = d.getDate();
+          if (!mEvents[day]) mEvents[day] = [];
+          mEvents[day].push(e);
+        }
+      });
+
+      const today = new Date();
+      const selectEvs = mEvents[state.selectedCalDay] || [];
+
+      viewport.innerHTML = `
+        <div class="space-y-4 pb-4">
+          <div class="bg-white/40 dark:bg-slate-900/30 px-4 pt-5 pb-3 border-b border-slate-200/50 dark:border-slate-800/80 sticky top-0 z-20 glass-nav shadow-xs flex justify-between items-center">
+            <h1 class="text-xl font-extrabold text-slate-900 dark:text-slate-50 flex items-center gap-1.5">
+              📅 Lịch sự kiện
+            </h1>
+
+            <div class="flex items-center bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/50 dark:border-white/5 rounded-xl p-1 gap-2">
+              <button onclick="shiftMonth(-1)" class="p-1 text-slate-500 hover:text-slate-800 rounded-lg cursor-pointer active:scale-90"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <span class="text-[10px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest min-w-[90px] text-center">
+                T${state.calMonth+1} / ${state.calYear}
+              </span>
+              <button onclick="shiftMonth(1)" class="p-1 text-slate-500 hover:text-slate-800 rounded-lg cursor-pointer active:scale-90"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+
+          <!-- Calendar core element wrapper -->
+          <div class="px-4">
+            <div class="bg-white/40 dark:bg-slate-950/20 rounded-3xl p-4 border border-slate-200/30 dark:border-slate-800 soft-shadow">
+              
+              <div class="grid grid-cols-7 gap-1.5 mb-3">
+                ${['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map(d => `
+                  <span class="text-center text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider select-none">${d}</span>
+                `).join('')}
+              </div>
+
+              <div class="grid grid-cols-7 gap-1.5">
+                <!-- spaces prev -->
+                ${[...Array(startOfW)].map((_, idx) => {
+                  const dNum = totalPrevDays - startOfW + idx + 1;
+                  return `<div class="aspect-square flex items-center justify-center text-[10px] font-bold text-slate-350 dark:text-slate-700 select-none">${dNum}</div>`;
+                }).join('')}
+
+                <!-- active days -->
+                ${[...Array(totalDays)].map((_, idx) => {
+                  const dNum = idx + 1;
+                  const has = !!mEvents[dNum];
+                  const sel = state.selectedCalDay === dNum;
+                  const isT = today.getDate() === dNum && today.getMonth() === state.calMonth && today.getFullYear() === state.calYear;
+
+                  let cls = "aspect-square rounded-xl flex flex-col items-center justify-center relative cursor-pointer select-none ring-offset-slate-50 ";
+                  
+                  if (sel && isT) cls += "bg-brand-red text-white shadow font-black scale-105";
+                  else if (sel) cls += "bg-brand-red-light text-brand-red-dark dark:text-rose-400 border border-brand-red-mid/50 font-black scale-105 z-10";
+                  else if (isT) cls += "bg-slate-800 text-white dark:bg-white dark:text-slate-950 font-black";
+                  else if (has) cls += "bg-slate-100/50 dark:bg-slate-800/30 hover:bg-slate-100 text-slate-700 dark:text-slate-200 font-bold border border-rose-100 dark:border-rose-950/20";
+                  else cls += "text-slate-500 dark:text-slate-400 hover:bg-slate-50 hover:text-slate-800 font-medium";
+
+                  return `
+                    <div onclick="selectCalDay(${dNum})" class="${cls}">
+                      <span class="text-[11px]">${dNum}</span>
+                      ${has ? `<span class="w-1 h-1 rounded-full absolute bottom-1.5 ${sel || isT ? 'bg-white' : 'bg-brand-red'}" />` : ''}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <!-- Legend labels -->
+            <div class="flex gap-4 px-2 mt-3 text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-slate-100 border border-rose-100 dark:bg-slate-800/40"></span>Có HĐ</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-slate-800 dark:bg-white"></span>Hôm nay</span>
+            </div>
+          </div>
+
+          <!-- Bottom detailed day events lists -->
+          <div class="px-4 space-y-3">
+            <h3 class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest pt-2 border-t border-slate-200/30">
+              Chi tiết ngày ${state.selectedCalDay} Tháng ${state.calMonth+1}, ${state.calYear}
+            </h3>
+
+            ${selectEvs.length === 0 ? `
+              <div class="text-center py-8 text-xs text-slate-400">Không có hoạt động đặc thù nào trong ngày này.</div>
+            ` : selectEvs.map(e => `
+              <div onclick="state.selectedEventId=${e.id}" class="bg-white/50 dark:bg-slate-900/50 border border-slate-200/40 dark:border-slate-800 rounded-2xl p-4 soft-shadow hover:border-brand-red-mid transition-all duration-200 cursor-pointer space-y-2 group">
+                <div class="flex justify-between items-start gap-3">
+                  <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-brand-red leading-snug">
+                    ${e.emoji} ${e.name}
+                  </h4>
+                  ${e.mucDRL && e.mucDRL !== '0' ? `
+                    <span class="text-[8px] font-bold bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 px-1.5 py-0.5 rounded">${e.mucDRL} (+${e.diemDRL}đ)</span>
+                  ` : ''}
+                </div>
+                <div class="text-[10px] font-medium text-slate-400 flex items-center gap-2">
+                  <span>${e.time}</span>
+                  <span>|</span>
+                  <span><i data-lucide="landmark" class="w-3 h-3 inline"></i> ${e.club}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    window.shiftMonth = function(dir) {
+      let m = state.calMonth + dir;
+      let y = state.calYear;
+      if (m > 11) { m = 0; y++; }
+      else if (m < 0) { m = 11; y--; }
+      state.calMonth = m;
+      state.calYear = y;
+      state.selectedCalDay = 1;
+    };
+
+    window.selectCalDay = function(d) {
+      state.selectedCalDay = d;
+    };
+
+    // ── TRANG TRI THỨC / REVIEW ──
+    function renderReview() {
+      // Calculate club reputations
+      const repsMap = {};
+      state.reviews.forEach(r => {
+        const e = state.events.find(ev => ev.id === r.eventId);
+        if (!e) return;
+        if (!repsMap[e.club]) repsMap[e.club] = { stars: [], eventIds: new Set() };
+        repsMap[e.club].stars.push(r.orgStars);
+        repsMap[e.club].eventIds.add(e.id);
+      });
+
+      const reps = Object.entries(repsMap).map(([club, data]) => ({
+        club,
+        avg: data.stars.reduce((s,p)=>s+p, 0) / data.stars.length,
+        count: data.stars.length,
+        eventsCount: data.eventIds.size
+      })).sort((a,b) => b.avg - a.avg);
+
+      const reviewedEvents = state.events.filter(e => state.reviews.some(r => r.eventId === e.id));
+      const activeId = state.selectedReviewId || reviewedEvents[0]?.id || null;
+
+      // sync select
+      if (activeId && !state.selectedReviewId) {
+        state.selectedReviewId = activeId;
+      }
+
+      const activeEvent = state.events.find(e => e.id === activeId);
+      const activeReviews = state.reviews.filter(r => r.eventId === activeId);
+
+      // Score computations
+      let avgOrgStr = "0.0";
+      let counts = [0,0,0,0,0];
+      const percentages = [0,0,0,0,0];
+
+      if (activeReviews.length > 0) {
+        const sum = activeReviews.reduce((s,r) => s + r.orgStars, 0);
+        avgOrgStr = (sum / activeReviews.length).toFixed(1);
+        counts = [5,4,3,2,1].map(stars => activeReviews.filter(r => r.orgStars === stars).length);
+        counts.forEach((c, idx) => {
+          percentages[idx] = (c / activeReviews.length) * 100;
+        });
+      }
+
+      viewport.innerHTML = `
+        <div class="space-y-4 pb-4">
+          <div class="bg-white/40 dark:bg-slate-900/30 px-4 pt-5 pb-3 border-b border-slate-200/50 dark:border-slate-800/80 sticky top-0 z-20 glass-nav shadow-xs">
+            <h1 class="text-xl font-extrabold text-slate-950 dark:text-slate-50">
+              📚 Trạm Tri Thức & Review
+            </h1>
+            <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-1">Đúc rút tri thức, hội thảo từ các trải nghiệm thật của FTUers.</p>
+          </div>
+
+          <!-- Trust shield -->
+          <div class="px-4">
+            <div class="bg-brand-red-light dark:bg-rose-950/20 border border-brand-red-mid/40 dark:border-rose-900/30 text-[#9b0c22] dark:text-rose-450 rounded-2xl p-3 flex items-center gap-2.5 soft-shadow">
+              <i data-lucide="shield-check" class="w-5 h-5 flex-shrink-0 text-brand-red"></i>
+              <span class="text-[10px] font-extrabold leading-normal uppercase tracking-wider">Review được kiểm duyệt an toàn, ẩn danh thông tin</span>
+            </div>
+          </div>
+
+          <!-- Club Reputation ranking list -->
+          ${reps.length > 0 ? `
+            <div class="px-4 space-y-3">
+              <h3 class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1">
+                <i data-lucide="award" class="w-3.5 h-3.5 text-brand-red"></i> Uy tín Ban tổ chức (CLB)
+              </h3>
+              <div class="space-y-2">
+                ${reps.slice(0, 3).map((r,idx) => `
+                  <div class="bg-white/60 dark:bg-slate-900/40 border border-slate-200/30 dark:border-slate-800 rounded-2xl p-4 flex items-center justify-between soft-shadow">
+                    <div class="flex items-center gap-3">
+                      <div class="w-8 h-8 rounded-lg bg-brand-red-light text-brand-red dark:bg-slate-800 flex items-center justify-center font-black text-xs border border-brand-red/10">${idx+1}</div>
+                      <div>
+                        <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100">${r.club}</h4>
+                        <p class="text-[9px] text-slate-400 font-bold mt-0.5">${r.eventsCount} hoạt động · ${r.count} đánh giá</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-md font-black text-brand-red leading-none block">${r.avg.toFixed(1)}</span>
+                      <div class="flex gap-0.5 mt-1 select-none">${renderPureStars(r.avg, "w-2.5 h-2.5")}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Horizontal Select Scroll Event reviewed -->
+          ${reviewedEvents.length > 0 ? `
+            <div class="space-y-4">
+              <div class="px-4">
+                <h3 class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+                  <i data-lucide="message-square" class="w-3.5 h-3.5 text-brand-red"></i> Đúc rút từ hoạt động
+                </h3>
+                <div class="flex gap-2 overflow-x-auto scrollbar-none">
+                  ${reviewedEvents.map(e => `
+                    <button onclick="state.selectedReviewId=${e.id}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
+                      activeId === e.id
+                        ? 'bg-brand-red text-white border-brand-red shadow-sm'
+                        : 'bg-white/60 dark:bg-slate-900/30 border-slate-200/50 dark:border-slate-800/50 text-slate-400 hover:bg-slate-50'
+                    }">${e.emoji} ${e.name.length > 25 ? e.name.substring(0, 23)+'…' : e.name}</button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Active Event breakdown logs -->
+              ${activeEvent ? `
+                <div class="px-4 space-y-4">
+                  <div class="bg-white/60 dark:bg-slate-900/60 border border-slate-200/30 dark:border-slate-800 rounded-3xl p-5 soft-shadow space-y-4">
+                    
+                    <div class="flex gap-3 items-center border-b border-slate-100 dark:border-slate-850 pb-3">
+                      <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-xl select-none">${activeEvent.emoji}</div>
+                      <div>
+                        <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 leading-snug">${activeEvent.name}</h4>
+                        <p class="text-[9px] text-slate-400 font-bold mt-0.5">💡 do CLB ${activeEvent.club} tổ chức</p>
+                      </div>
+                    </div>
+
+                    <!-- Scores representation -->
+                    <div class="flex gap-6 items-center">
+                      <div class="text-center px-1">
+                        <span class="text-3xl font-black text-brand-red block leading-none">${avgOrgStr}</span>
+                        <div class="flex gap-0.5 mt-2 justify-center">${renderPureStars(parseFloat(avgOrgStr))}</div>
+                        <span class="text-[9px] text-slate-400 font-bold mt-1 block">${activeReviews.length} lượt đánh giá</span>
+                      </div>
+                      
+                      <div class="flex-grow space-y-2">
+                        ${[5,4,3,2,1].map((s, idx) => `
+                          <div class="flex items-center gap-1.5 text-[9px] text-slate-400 font-bold leading-none">
+                            <span class="w-2.5">${s}</span>
+                            <div class="flex-grow h-1.5 bg-slate-100 dark:bg-slate-800/85 rounded-full overflow-hidden">
+                              <div class="h-full bg-brand-red rounded-full" style="width:${percentages[idx]}%" />
+                            </div>
+                            <span class="w-3">${counts[idx]}</span>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Takeaway lists -->
+                  <div class="space-y-3 pt-1">
+                    <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Key Takeaways từ sinh viên</h4>
+                    ${activeReviews.map(r => `
+                      <div class="bg-white/50 dark:bg-slate-900/40 border border-slate-200/30 dark:border-slate-800 rounded-2xl p-4.5 soft-shadow space-y-3">
+                        <div class="flex justify-between items-center text-xs">
+                          <span class="font-bold text-slate-700 dark:text-slate-200">${r.user}</span>
+                          <div class="flex gap-0.5 text-[9px] text-slate-400 leading-none">
+                            <span>Tổ chức:</span>
+                            ${renderPureStars(r.orgStars, "w-2.5 h-2.5")}
+                          </div>
+                        </div>
+
+                        <div class="bg-brand-red-light dark:bg-brand-red/10 border-l-4 border-brand-red p-3.5 rounded-r-xl space-y-1">
+                          <span class="text-[8px] font-black text-[#9b0c22] dark:text-rose-450 uppercase tracking-wider block">Bài học rút gọn / Trải nghiệm</span>
+                          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-semibold italic">${r.takeaway}</p>
+                        </div>
+
+                        ${r.tagsPos.length > 0 || r.tagsNeg.length > 0 ? `
+                          <div class="flex flex-wrap gap-1">
+                            ${r.tagsPos.map(tag => `<span class="text-[8px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 px-1.5 py-0.5 rounded">+ ${tag}</span>`).join('')}
+                            ${r.tagsNeg.map(tag => `<span class="text-[8px] font-bold bg-rose-50 text-rose-700 border border-rose-100 px-1.5 py-0.5 rounded">- ${tag}</span>`).join('')}
+                          </div>
+                        `: ''}
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+
+          <!-- Write review button -->
+          <div class="px-4 pt-1">
+            <a href="https://tally.so/r/pbk2xq" target="_blank" class="flex items-center justify-center gap-2 w-full py-4 bg-white/40 border-2 border-dashed border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-red hover:border-brand-red-mid rounded-2xl text-xs font-bold transition-all shadow-xs cursor-pointer">
+              <i data-lucide="edit-3" class="w-4 h-4"></i> Chia sẻ Key Takeaways của bạn
+            </a>
+            <p class="text-[9px] text-slate-400 text-center font-bold mt-2">* Thông tin được cập nhật bảo mật sau khi duyệt.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── TRANG TIÊU CHUẨN ĐRL ──
+    function renderDrl() {
+      const tabs = [
+        { value: '1.1', label: 'Mục 1.1' },
+         { value: '3.1', label: 'Mục 3.1' },
+         { value: '3.2', label: 'Mục 3.2' },
+         { value: '0', label: 'Không ĐRL' }
+      ];
+
+      const filtered = state.events.filter(e => String(e.mucDRL) === String(state.currentDrlMuc))
+        .sort((a,b) => {
+          const dlA = getDaysLeft(a.deadline);
+          const dlB = getDaysLeft(b.deadline);
+          if (dlA >= 0 && dlB >= 0) return dlA - dlB;
+          if (dlA < 0 && dlB < 0) return dlB - dlA;
+          return dlA >= 0 ? -1 : 1;
+        });
+
+      viewport.innerHTML = `
+        <div class="space-y-4 pb-4">
+          <div class="bg-white/40 dark:bg-slate-900/30 px-4 pt-5 pb-3 border-b border-slate-200/50 dark:border-slate-800/80 sticky top-0 z-20 glass-nav shadow-xs">
+            <h1 class="text-xl font-extrabold text-slate-950 dark:text-slate-50">
+              🎯 Điểm rèn luyện quy đổi
+            </h1>
+            <p class="text-[10px] text-slate-400 font-bold mt-1">Đánh giá nhanh và quy đổi điểm chuẩn theo Thông tư quy chế FTU.</p>
+
+            <div class="grid grid-cols-4 gap-1.5 mt-4">
+              ${tabs.map(t => `
+                <button onclick="state.currentDrlMuc='${t.value}'" class="py-3 px-1 rounded-xl text-xs font-bold cursor-pointer transition-all border ${
+                  state.currentDrlMuc === t.value
+                    ? 'bg-brand-red text-white border-brand-red shadow-sm font-black'
+                    : 'bg-white/60 dark:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 text-slate-400'
+                }">${t.label}</button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Description DRL card -->
+          <div class="px-4">
+            <div class="bg-slate-100/50 dark:bg-slate-850 border border-slate-200/30 dark:border-slate-800 p-4 rounded-2xl text-[11px] text-slate-500 font-bold leading-relaxed soft-shadow flex gap-2.5">
+              <i data-lucide="award" class="w-5 h-5 text-brand-red flex-shrink-0"></i>
+              <span>${DRL_DESCS[state.currentDrlMuc]}</span>
+            </div>
+          </div>
+
+          <!-- List columns -->
+          <div class="px-4 space-y-3">
+            ${filtered.length === 0 ? `
+              <div class="text-center py-12 bg-white/40 border border-slate-200/40 rounded-2xl p-4 text-slate-400 text-xs">Chưa có hoạt động nào trong mục này.</div>
+            ` : filtered.map(e => {
+              const dl = getDaysLeft(e.deadline);
+              const isU = dl <= 3 && dl >= 0;
+              const hasE = dl < 0;
+              let deadlineText = hasE ? 'Đã hết hạn' : dl === 0 ? 'Hết đơn hôm nay' : `Còn ${dl} ngày`;
+              
+              return `
+                <div onclick="state.selectedEventId=${e.id}" class="bg-white/60 dark:bg-slate-900/50 border border-slate-200/35 dark:border-slate-800 rounded-2xl p-4 flex justify-between items-center cursor-pointer soft-shadow group">
+                  <div class="min-w-0 pr-2 space-y-1">
+                    <span class="inline-block text-[8px] font-black uppercase text-[#9b0c22] dark:text-rose-450 bg-brand-red-light px-1.5 py-0.5 rounded border border-brand-red/10">${e.club}</span>
+                    <h4 class="text-xs font-extrabold text-slate-800 dark:text-slate-100 leading-snug group-hover:text-brand-red transition-all truncate">${e.emoji} ${e.name}</h4>
+                    <div class="text-[9px] text-slate-400 font-bold flex gap-2 items-center flex-wrap">
+                      <span>Diễn ra: ${formatVNDate(e.date)}</span>
+                      <span>•</span>
+                      <span class="${hasE ? 'text-slate-300 dark:text-slate-600' : isU ? 'text-red-600 animate-pulse font-black' : 'text-slate-400'}">Đăng ký: ${deadlineText}</span>
+                    </div>
+                  </div>
+
+                  <div class="text-right flex-shrink-0">
+                    ${e.diemDRL > 0 ? `
+                      <span class="text-base font-black text-brand-red">+${e.diemDRL}đ</span>
+                    ` : `
+                      <span class="text-xs text-slate-400 font-bold">—</span>
+                    `}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Star UI drawer helper
+    function renderPureStars(rating, classS = "w-3 h-3") {
+      const full = Math.floor(rating);
+      const half = rating - full >= 0.4;
+      let html = '';
+      for (let i = 0; i < 5; i++) {
+        if (i < full) {
+          html += `<i data-lucide="star" class="${classS} text-amber-400 fill-amber-400"></i>`;
+        } else if (i === full && half) {
+          html += `<i data-lucide="star-half" class="${classS} text-amber-400 fill-amber-400"></i>`;
+        } else {
+          html += `<i data-lucide="star" class="${classS} text-slate-200 dark:text-slate-700"></i>`;
+        }
+      }
+      return html;
+    }
+
+    // Image error loader handles
+    function renderImgBlock(e) {
+      if (e.POSTER) {
+        return `
+          <img src="${e.POSTER}" class="w-full h-full object-cover transition-all group-hover:scale-105" loading="lazy" referrerPolicy="no-referrer" onerror="fallbackPoster(this, '${e.emoji}', '${e.color}', '${e.club}')">
+        `;
+      }
+      return `
+        <div class="w-full h-full flex flex-col items-center justify-center p-3 text-center" style="background-color: ${e.color || '#fdf0f2'}">
+          <span class="text-4xl select-none animate-bounce-subtle">${e.emoji || '🎓'}</span>
+          <span class="text-[9px] font-black text-slate-400 uppercase mt-1 tracking-widest">${e.club}</span>
+        </div>
+      `;
+    }
+
+    window.fallbackPoster = function(img, emoji, color, club) {
+      const parent = img.parentElement;
+      if (parent) {
+        parent.innerHTML = `
+          <div class="w-full h-full flex flex-col items-center justify-center p-3 text-center" style="background-color: ${color || '#fdf0f2'}">
+            <span class="text-4xl select-none animate-bounce-subtle">${emoji || '🎓'}</span>
+            <span class="text-[9px] font-black text-slate-400 uppercase mt-1 tracking-widest">${club}</span>
+          </div>
+        `;
+        lucide.createIcons();
+      }
+    };
+
+    // ══════════════════════════════════════════
+    //   DETAIL SHEET MODAL LOADER
+    // ══════════════════════════════════════════
+    const overlay = document.getElementById('modal-overlay');
+    const sheet = document.getElementById('modal-sheet');
+
+    function renderModal() {
+      const id = state.selectedEventId;
+      if (!id) {
+        closeModal();
+        return;
+      }
+
+      const e = state.events.find(ev => ev.id === id);
+      if (!e) return;
+
+      const activeEReviews = state.reviews.filter(r => r.eventId === e.id);
+      const canSub = e.status === 'open';
+
+      const body = document.getElementById('modal-body');
+      const footer = document.getElementById('modal-footer');
+
+      body.innerHTML = `
+        <div class="h-44 rounded-2xl overflow-hidden shadow border border-slate-100/50 bg-slate-100 dark:bg-slate-800">
+          ${renderImgBlock(e)}
+        </div>
+
+        <div>
+          <div class="flex flex-wrap gap-2 mb-2">
+            <span class="text-[9px] font-black px-2 py-0.5 rounded-full border border-rose-100 bg-brand-red-light text-brand-red uppercase">${e.status==='open'?'Đang hoạt động':e.status==='closed'?'Hết hạn':'Đã diễn ra'}</span>
+            <span class="bg-slate-100 dark:bg-slate-800 text-slate-400 text-[9px] font-black uppercase px-2 py-0.5 rounded-full">${e.type}</span>
+            ${e.mucDRL && e.mucDRL !== '0' ? `<span class="bg-blue-50 text-blue-700 text-[9px] font-bold px-2 py-0.5 rounded-full">ĐRL Mục ${e.mucDRL} (+${e.diemDRL}đ)</span>`:''}
+          </div>
+          <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white leading-snug">
+            ${e.emoji} ${e.name}
+          </h2>
+        </div>
+
+        <!-- Meta grids -->
+        <div class="grid grid-cols-2 gap-3.5 bg-slate-100/50 dark:bg-slate-800/30 rounded-2xl p-4 border border-slate-200/30 dark:border-slate-800">
+          <div class="space-y-0.5">
+            <span class="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Thời gian diễn ra</span>
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-200 block">${formatVNDate(e.date)}, ${e.time}</span>
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Địa điểm</span>
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-200 block truncate">${e.location || (e.mode === 'Online'? 'Họp trực tuyến':'TBA')}</span>
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Ban tổ chức</span>
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-200 block truncate">${e.club}</span>
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block">Hình thức</span>
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-200 block">${e.mode}</span>
+          </div>
+        </div>
+
+        <!-- Desc -->
+        ${e.desc ? `
+          <div class="space-y-1">
+            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Nội dung chi tiết</span>
+            <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-100/40 dark:bg-slate-800/50 border border-slate-200/30 dark:border-slate-800 rounded-xl p-3.5 max-h-36 overflow-y-auto whitespace-pre-line">${e.desc}</div>
+          </div>
+        `:''}
+
+        <!-- Skills -->
+        ${e.skills.length > 0 ? `
+          <div class="space-y-2">
+            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Kỹ năng cốt lõi</span>
+            <div class="flex flex-wrap gap-1.5">
+              ${e.skills.map(sk => `<span class="text-xs bg-white dark:bg-slate-850 text-slate-500 dark:text-slate-450 px-2 py-1 rounded-lg border border-slate-200/50 dark:border-slate-800">${sk}</span>`).join('')}
+            </div>
+          </div>
+        `:''}
+
+        <!-- Associated review lists inside modal details -->
+        ${activeEReviews.length > 0 ? `
+          <div class="space-y-2.5 pt-2">
+            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Review thực từ FTUers</span>
+            <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+              ${activeEReviews.slice(0,2).map(r => `
+                <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200/45 dark:border-slate-800 p-3.5 rounded-xl space-y-1.5 shadow-xs">
+                  <div class="flex justify-between items-center text-[10px] font-bold text-slate-500">
+                    <span>${r.user}</span>
+                    <div class="flex gap-0.5">${renderPureStars(r.orgStars, "w-2.5 h-2.5")}</div>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 italic font-semibold leading-relaxed block">"${r.takeaway}"</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `:''}
+      `;
+
+      if (canSub && e.link) {
+        footer.innerHTML = `
+          <a href="${e.link}" target="_blank" class="w-full py-3.5 px-4 bg-brand-red hover:bg-brand-red-dark text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform cursor-pointer shadow">
+            Đăng ký tham gia ngay <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        `;
+      } else {
+        footer.innerHTML = `
+          <div class="w-full text-center py-3 bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 text-slate-400 font-extrabold rounded-xl text-xs">
+            ${e.status==='ended'?'Hoạt động đã kết thúc':'Cổng đăng ký đã đóng'}
+          </div>
+        `;
+      }
+
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        sheet.classList.remove('translate-y-full');
+      }, 50);
+
+      document.body.classList.add('overflow-hidden');
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      sheet.classList.add('translate-y-full');
+      overlay.classList.add('opacity-0');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        state.selectedEventId = null;
+      }, 300);
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (ev) => {
+      if (ev.target === overlay) closeModal();
+    });
+
+    // ══════════════════════════════════════════
+    //   BACKGROUND SYNC TOAST PANEL
+    // ══════════════════════════════════════════
+    const toast = document.getElementById('toast-container');
+    
+    function toggleToast() {
+      if (state.showRefreshToast) {
+        toast.classList.remove('hidden');
+      } else {
+        toast.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('toast-close').addEventListener('click', () => {
+      state.showRefreshToast = false;
+    });
+
+    document.getElementById('toast-refresh-btn').addEventListener('click', () => {
+      if (state.pendingSyncData) {
+        state.events = state.pendingSyncData.events;
+        state.reviews = state.pendingSyncData.reviews;
+        
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          timestamp: Date.now(),
+          events: state.pendingSyncData.events,
+          reviews: state.pendingSyncData.reviews
+        }));
+        
+        state.pendingSyncData = null;
+      }
+      state.showRefreshToast = false;
+    });
+
+    // ══════════════════════════════════════════
+    //   TAB NAVIGATION CONTROL
+    // ══════════════════════════════════════════
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        
+        // render active nav styles
+        document.querySelectorAll('.nav-btn').forEach(b => {
+          b.classList.remove('text-brand-red', 'font-bold');
+          b.classList.add('text-slate-400', 'dark:text-slate-500');
+          b.querySelector('.nav-dot').classList.add('hidden');
+        });
+
+        btn.classList.add('text-brand-red', 'font-bold');
+        btn.classList.remove('text-slate-400', 'dark:text-slate-500');
+        btn.querySelector('.nav-dot').classList.remove('hidden');
+
+        state.activeTab = tab;
+      });
+    });
+
+    // ══════════════════════════════════════════
+    //   APPLET INITIALIZATION
+    // ══════════════════════════════════════════
+    (async function init() {
+      initTheme();
+      await loadResources();
+      renderApp();
+    })();
+  </script>
 </body>
 </html>
