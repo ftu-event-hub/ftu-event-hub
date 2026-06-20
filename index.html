@@ -915,21 +915,28 @@ function renderExplore() {
     return;
   }
 
-  document.getElementById('explore-list').innerHTML = list.map(e => `
-    <div class="event-row" onclick="openModal(${e.id})">
-      <div class="er-top">
-        <div class="er-title">${e.emoji} ${e.name}</div>
-        ${e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : ''}
+ document.getElementById('explore-list').innerHTML = list.map(e => `
+    <div class="event-row" onclick="openModal(${e.id})" style="display: flex; gap: 12px; align-items: stretch;">
+      ${e.poster ? 
+        `<div style="width: 80px; flex-shrink: 0; border-radius: 8px; background-image: url('${e.poster}'); background-size: cover; background-position: center;"></div>` 
+        : 
+        `<div style="width: 80px; flex-shrink: 0; border-radius: 8px; background: ${e.color}; display: flex; align-items: center; justify-content: center; font-size: 24px;">${e.emoji}</div>`
+      }
+      <div style="flex: 1; min-width: 0;">
+        <div class="er-top">
+          <div class="er-title">${e.name}</div>
+          ${e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : ''}
+        </div>
+        <div class="er-meta">📅 ${formatDate(e.date)} ${e.time} &nbsp;|&nbsp; ${e.club} &nbsp;|&nbsp; ${e.mode === 'Online' ? '🌐 Online' : '📍 ' + e.location}</div>
+        <div class="er-tags">
+          ${statusBadge(e.status)}
+          ${e.skills.map(s => `<span class="tag tag-green">${s}</span>`).join('')}
+          <span class="tag tag-gray">${e.type}</span>
+        </div>
+        ${e.rating > 0 ? `<div class="er-stars">⭐ ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
       </div>
-      <div class="er-meta">📅 ${formatDate(e.date)} ${e.time} &nbsp;|&nbsp; ${e.club} &nbsp;|&nbsp; ${e.mode === 'Online' ? '🌐 Online' : '📍 ' + e.location}</div>
-      <div class="er-tags">
-        ${statusBadge(e.status)}
-        ${e.skills.map(s => `<span class="tag tag-green">${s}</span>`).join('')}
-        <span class="tag tag-gray">${e.type}</span>
-      </div>
-      ${e.rating > 0 ? `<div class="er-stars">⭐ ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
     </div>
-  `).join('');
+`).join('');
 }
 
 // ══════════════════════════════════════════
@@ -1234,7 +1241,9 @@ function openModal(id) {
   const reviewsForEvent = REVIEWS.filter(r => r.eventId === e.id);
   document.getElementById('modal-body').innerHTML = `
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-event-img" style="background:${e.color}">${e.emoji}</div>
+   <div class="modal-event-img" style="${e.poster ? `background-image: url('${e.poster}'); background-size: cover; background-position: center;` : `background:${e.color}`}">
+  ${e.poster ? '' : e.emoji}
+</div>
     <div class="modal-title">${e.name}</div>
     <div class="modal-tags">
       ${statusBadge(e.status)}
