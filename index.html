@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="UcaD1WN1D6utbz_vOfvYORE9EaKv-4wnMwG2n09Aas8" />
-  <title>FTU Event Hub - Tổng hợp sự kiện ngoại khóa</title>
+  <title>FTU Event Hub Tổng hợp sự kiện ngoại khóa</title>
   <meta name="description" content="Nền tảng tổng hợp toàn bộ hoạt động ngoại khóa, sự kiện, talkshow và quản lý điểm rèn luyện dành cho sinh viên FTU.">
   <meta name="keywords" content="FTU, sự kiện FTU, điểm rèn luyện FTU, ngoại khóa, talkshow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --green: #c8102e;
   --green-dark: #9b0c22;
   --green-light: #fdf0f2;
-  --green-mid: #f5b8c2;
+  --green-mid: #ff002b;
   --amber: #f59e0b;
   --amber-light: #fef3c7;
   --blue: #3b82f6;
@@ -137,7 +137,7 @@ body {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 12px;
 }
-.section-title { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+.section-title { font-size: 25px; font-weight: 700; color: var(--gray-900); }
 .see-all { font-size: 12px; color: var(--green); font-weight: 500; cursor: pointer; border: none; background: none; font-family: var(--font); }
 
 /* ── QUICK LINKS ── */
@@ -190,14 +190,14 @@ body {
 
 /* ── CTA ── */
 .cta-box {
-  margin: 0 16px; background: var(--amber-light);
-  border: 1px solid #fde68a; border-radius: var(--radius);
+  margin: 0 16px; background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, #e84060 100%);
+  border: 1px solid #ff0000; border-radius: var(--radius);
   padding: 14px 16px; display: flex; align-items: center; gap: 12px;
   cursor: pointer;
 }
-.cta-box-text { font-size: 12px; font-weight: 600; color: #78350f; flex: 1; }
-.cta-box-sub { font-size: 11px; color: #92400e; font-weight: 400; }
-.cta-arrow { font-size: 18px; }
+.cta-box-text { font-size: 24px; font-weight: 600; color: #ffffff; flex: 1; }
+.cta-box-sub { font-size: 16px; color: #ffffff; font-weight: 400; }
+
 
 /* ── EXPLORE PAGE ── */
 .explore-top {
@@ -438,7 +438,8 @@ body {
 .page-scroll { max-height: calc(100vh - 57px); overflow-y: auto; }
 </style>
 </head>
-<body><div id="loading-overlay" style="
+<body><!-- ══ LOADING OVERLAY ══ -->
+<div id="loading-overlay" style="
   position:fixed; inset:0; background:white; z-index:9999;
   display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px;
 ">
@@ -457,17 +458,18 @@ body {
 <div class="app">
   <main class="main">
 
+    <!-- ═══════════════ HOME PAGE ═══════════════ -->
     <div class="page active" id="page-home">
       <div class="hero"> 
 <button onclick="reloadData()" style="
   position:absolute; top:16px; right:16px;
   background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3);
   color:white; border-radius:8px; padding:5px 10px; font-size:11px; cursor:pointer;
-">🔄 Làm mới</button>
+">Làm mới</button>
 
-        <div class="hero-tag">🎓 FTU Event Hub</div>
+        <div class="hero-tag">FTU EVENT HUB</div>
         <h1>Sự kiện ngoại khóa FTU</h1>
-        <p>Tổng hợp toàn bộ hoạt động ngoại khóa — lọc theo ĐRL, kỹ năng và định hướng của bạn</p>
+        <p>Tổng hợp toàn bộ hoạt động ngoại khóa được lọc theo ĐRL, kỹ năng và định hướng cá nhân</p>
         <div class="hero-filters">
           <button class="hpill active" onclick="filterHome('all',this)">Tất cả</button>
           <button class="hpill" onclick="filterHome('Talkshow',this)">Talkshow</button>
@@ -485,29 +487,29 @@ body {
 
       <div class="section">
         <div class="section-head">
-          <span class="section-title">🔥 Sự kiện nổi bật</span>
-          <button class="see-all" onclick="showPage('explore')">Xem tất cả →</button>
+          <span class="section-title">SỰ KIỆN NỔI BẬT</span>
+          <button class="see-all" onclick="showPage('explore')">Xem tất cả</button>
         </div>
         <div class="event-grid" id="home-events"></div>
       </div>
 
       <div class="section" style="padding-top:0">
-        <div class="section-head"><span class="section-title">Truy cập nhanh</span></div>
+        <div class="section-head"><span class="section-title">TRUY CẬP NHANH</span></div>
         <div class="quick-grid">
           <div class="qcard" onclick="showPage('explore')">
-            <div class="qicon" style="background:#e6f7f1">🔍</div>
+            <div class="qicon" style="background:#e6f7f1"></div>
             <div><div class="qcard-text">Khám phá</div><div class="qcard-sub">Tất cả sự kiện</div></div>
           </div>
           <div class="qcard" onclick="showPage('calendar')">
-            <div class="qicon" style="background:#eff6ff">📅</div>
+            <div class="qicon" style="background:#eff6ff"></div>
             <div><div class="qcard-text">Lịch tháng</div><div class="qcard-sub">Xem theo ngày</div></div>
           </div>
           <div class="qcard" onclick="showPage('review')">
-            <div class="qicon" style="background:#fdf0f2">📚</div>
+            <div class="qicon" style="background:#fdf0f2"></div>
             <div><div class="qcard-text">Trạm Tri Thức</div><div class="qcard-sub">Review & Key Takeaways</div></div>
           </div>
           <div class="qcard" onclick="showPage('drl')">
-            <div class="qicon" style="background:#fef2f2">🎯</div>
+            <div class="qicon" style="background:#fef2f2"></div>
             <div><div class="qcard-text">Lọc ĐRL</div><div class="qcard-sub">Theo mục điểm</div></div>
           </div>
         </div>
@@ -515,21 +517,21 @@ body {
 
       <div class="cta-box" onclick="window.open('https://tally.so/r/ODoqeR', '_blank')">
         <div>
-          <div class="cta-box-text">📮 Bạn là BTC sự kiện?</div>
+          <div class="cta-box-text">Bạn là BTC sự kiện?</div>
           <div class="cta-box-sub">Gửi event của bạn lên Hub ngay</div>
         </div>
-        <span class="cta-arrow">→</span>
       </div>
       <div style="height:16px"></div>
     </div>
 
+    <!-- ═══════════════ EXPLORE PAGE ═══════════════ -->
     <div class="page" id="page-explore">
       <div class="explore-top">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <div class="explore-title" style="margin:0">🔍 Khám phá</div>
+          <div class="explore-title" style="margin:0">KHÁM PHÁ</div>
         </div>
         <div class="search-box">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon"></span>
           <input type="text" placeholder="Tìm theo tên CLB, chủ đề, kỹ năng..." id="search-input" oninput="renderExplore()">
         </div>
         <div class="filter-tabs" id="type-filter">
@@ -558,9 +560,10 @@ body {
       <div class="event-list-page" id="explore-list"></div>
     </div>
 
+    <!-- ═══════════════ CALENDAR PAGE ═══════════════ -->
     <div class="page" id="page-calendar">
       <div class="cal-header-bar">
-        <div class="cal-title-row">📅 Lịch sự kiện</div>
+        <div class="cal-title-row">Lịch sự kiện</div>
         <div class="cal-nav">
           <button onclick="changeMonth(-1)">‹</button>
           <span class="cal-month-label" id="cal-month-label"></span>
@@ -583,36 +586,38 @@ body {
       </div>
     </div>
 
+    <!-- ═══════════════ REVIEW PAGE ═══════════════ -->
     <div class="page" id="page-review">
       <div class="review-header">
-        <h2>📚 Trạm Tri Thức & Review</h2>
-        <p>Học lỏm kiến thức từ sự kiện bạn lỡ mất — đánh giá thật từ sinh viên FTU</p>
+        <h2>Trạm Tri Thức & Review</h2>
+        <p>Học lỏm kiến thức từ sự kiện đã lỡ, đánh giá thật từ sinh viên FTU</p>
       </div>
-      <div class="review-trust">✅ Tất cả review đã được kiểm duyệt bởi nhóm FTU Event Hub</div>
+      <div class="review-trust">Tất cả review đã được kiểm duyệt bởi nhóm FTU Event Hub</div>
 
       <div style="padding:12px 16px 0">
-        <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">🏅 Uy tín CLB tổ chức</div>
+        <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">Uy tín CLB tổ chức</div>
         <div id="club-reputation-list" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
 
       <div style="padding:12px 16px 4px;border-top:1px solid #f3f4f6;margin-top:12px">
-        <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">📖 Chọn sự kiện để đọc Key Takeaways</div>
+        <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">Chọn sự kiện để đọc Key Takeaways</div>
         <div class="ev-pills" id="review-event-pills"></div>
       </div>
       <div class="score-card" id="score-card"></div>
       <div class="reviews-list" id="reviews-list"></div>
       <button class="write-review-btn" onclick="window.open('https://tally.so/r/pbk2xq', '_blank')">
-        ✏️ Chia sẻ trải nghiệm & Key Takeaways của bạn
+        Chia sẻ trải nghiệm & Key Takeaways 
       </button>
       <div style="padding:4px 16px 8px;font-size:11px;color:#9ca3af;text-align:center">
         Review sẽ được hiện sau khi kiểm duyệt (trong 24h)
       </div>
     </div>
 
+    <!-- ═══════════════ DRL PAGE ═══════════════ -->
     <div class="page" id="page-drl">
       <div class="drl-header">
-        <h2>🎯 Lọc theo ĐRL</h2>
-        <p>Tìm sự kiện cộng điểm rèn luyện theo mục bạn cần</p>
+        <h2>Lọc theo ĐRL</h2>
+        <p>Tìm sự kiện cộng điểm rèn luyện theo mục </p>
       </div>
       <div class="drl-muc-tabs">
         <button class="drl-tab active" onclick="setDrlMuc('1.1',this)">Mục 1.1</button>
@@ -626,6 +631,7 @@ body {
 
   </main>
 
+  <!-- ═══════════════ BOTTOM NAV ═══════════════ -->
   <nav class="bottom-nav">
     <button class="nav-item active" id="nav-home" onclick="showPage('home')">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -650,6 +656,7 @@ body {
   </nav>
 </div>
 
+<!-- ═══════════════ EVENT MODAL ═══════════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
     <div class="modal-handle"></div>
@@ -665,6 +672,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbweeVzriRh1fGILRRM3M1eg
 
 // ══════════════════════════════════════════
 //   UUID → LABEL MAPPING (fix Tally form)
+//   
 // ══════════════════════════════════════════
 const TYPE_MAP = {
   '3bb05abc-6500-4a8d-8966-95cf9f53c60f': 'Workshop',
@@ -691,6 +699,7 @@ const MUCDRL_MAP = {
   'f1a2b3c4-0003-0003-0003-000000000002': '0',
 };
 
+
 function mapField(value, mapping) {
   if (!value) return value;
   const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -700,17 +709,20 @@ function mapField(value, mapping) {
   return value;
 }
 
+
 let EVENTS  = [];
 let REVIEWS = [];
+
 
 function convertDriveLink(url) {
   if (!url) return '';
   const match = url.match(/\/d\/(.*?)(\/|$)/);
   if (match && match[1] && url.includes('drive.google.com')) {
-    return `https://lh3.googleusercontent.com/u/0/d/${match[1]}`;
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
   return url;
 }
+
 
 function posterStyle(e) {
   if (e.POSTER) {
@@ -718,6 +730,7 @@ function posterStyle(e) {
   }
   return `background: ${e.color || '#fdf0f2'}`;
 }
+
 
 function posterInner(e) {
   if (e.POSTER) {
@@ -731,8 +744,10 @@ function posterInner(e) {
   return e.emoji || '';
 }
 
+
 async function loadData() {
   showLoading(true);
+
   try {
     const [evRes, rvRes] = await Promise.all([
       fetch(API_URL + '?action=getEvents&t=' + Date.now()),
@@ -748,10 +763,12 @@ async function loadData() {
     const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
 
     EVENTS = EVENTS.map(e => {
+
       e.type   = mapField(e.type,   TYPE_MAP);
       e.mode   = mapField(e.mode,   MODE_MAP);
       e.mucDRL = mapField(e.mucDRL, MUCDRL_MAP);
 
+   
       if (e.POSTER) {
         e.POSTER = convertDriveLink(e.POSTER);
       }
@@ -765,6 +782,7 @@ async function loadData() {
       }
 
       if (!e.mucDRL || e.mucDRL === '') e.mucDRL = '0';
+
       return e;
     });
 
@@ -773,13 +791,13 @@ async function loadData() {
     showLoading(false);
     document.getElementById('loading-overlay').innerHTML = `
       <div style="text-align:center;padding:24px">
-        <div style="font-size:40px;margin-bottom:10px">😔</div>
+        <div style="font-size:40px;margin-bottom:10px"></div>
         <p style="font-size:14px;color:#374151;font-weight:600;margin-bottom:4px">Không thể tải dữ liệu</p>
         <p style="font-size:12px;color:#9ca3af;margin-bottom:16px">Kiểm tra kết nối mạng và thử lại</p>
         <button onclick="reloadData()"
           style="padding:9px 22px;background:#c8102e;color:white;border:none;
                  border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">
-          🔄 Thử lại
+          Thử lại
         </button>
       </div>
     `;
@@ -869,16 +887,16 @@ function renderHome() {
           ${e.mucDRL && e.mucDRL !== '0' ? `<span class="tag tag-blue">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : '<span class="tag tag-gray">Không ĐRL</span>'}
           ${(e.skills || []).slice(0,1).map(s => `<span class="tag tag-green">${s}</span>`).join('')}
         </div>
-        ${e.rating > 0 ? `<div class="ecard-stars">⭐ ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
+        ${e.rating > 0 ? `<div class="ecard-stars">${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
       </div>
     </div>
   `).join('');
 }
 
 function statusBadge(status) {
-  if (status === 'open')   return '<span class="tag" style="background:#dcfce7;color:#166534">🟢 Đang mở đơn</span>';
-  if (status === 'closed') return '<span class="tag" style="background:#fef9c3;color:#854d0e">🟡 Đã đóng đơn</span>';
-  if (status === 'ended')  return '<span class="tag" style="background:#f1f5f9;color:#64748b">⚫ Đã kết thúc</span>';
+  if (status === 'open')   return '<span class="tag" style="background:#dcfce7;color:#166534">Đang mở đơn</span>';
+  if (status === 'closed') return '<span class="tag" style="background:#fef9c3;color:#854d0e">Đã đóng đơn</span>';
+  if (status === 'ended')  return '<span class="tag" style="background:#f1f5f9;color:#64748b">Đã kết thúc</span>';
   return '';
 }
 
@@ -940,7 +958,7 @@ function renderExplore() {
     const matchType = typeFilter === 'all' || e.type === typeFilter;
     const matchSkill = skillFilters.length === 0 || skillFilters.some(s => (e.skills || []).includes(s));
     const matchDRL = drlFilters.length === 0 || drlFilters.some(d => {
-      if (d === 'Không ĐRL') return !e.mucDRL || e.mucDRL == '0';
+      if (d === 'Không ĐRL') return !e.mucDRL || e.mucDRL === '0';
       return 'Mục ' + e.mucDRL === d;
     });
     return matchQ && matchType && matchSkill && matchDRL;
@@ -954,7 +972,7 @@ function renderExplore() {
 
   if (list.length === 0) {
     document.getElementById('explore-list').innerHTML = `
-      <div class="empty-state"><div class="big">🔍</div><p>Không tìm thấy sự kiện phù hợp.<br>Thử điều chỉnh bộ lọc nhé!</p></div>
+      <div class="empty-state"><div class="big"></div><p>Không tìm thấy sự kiện phù hợp.<br>Thử điều chỉnh bộ lọc nhé!</p></div>
     `;
     return;
   }
@@ -965,13 +983,13 @@ function renderExplore() {
         <div class="er-title">${e.emoji || ''} ${e.name}</div>
         ${e.mucDRL && e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : ''}
       </div>
-      <div class="er-meta">📅 ${formatDate(e.date)} ${e.time} &nbsp;|&nbsp; ${e.club} &nbsp;|&nbsp; ${e.mode === 'Online' ? '🌐 Online' : '📍 ' + (e.location || '')}</div>
+      <div class="er-meta">${formatDate(e.date)} ${e.time} &nbsp;|&nbsp; ${e.club} &nbsp;|&nbsp; ${e.mode === 'Online' ? ' Online' : ' ' + (e.location || '')}</div>
       <div class="er-tags">
         ${statusBadge(e.status)}
         ${(e.skills || []).map(s => `<span class="tag tag-green">${s}</span>`).join('')}
         <span class="tag tag-gray">${e.type || ''}</span>
       </div>
-      ${e.rating > 0 ? `<div class="er-stars">⭐ ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
+      ${e.rating > 0 ? `<div class="er-stars"> ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
     </div>
   `).join('');
 }
@@ -1068,7 +1086,7 @@ function selectCalDay(day) {
           <div class="er-title">${e.emoji || ''} ${e.name}</div>
           ${e.mucDRL && e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL} · ${e.diemDRL}đ</span>` : ''}
         </div>
-        <div class="er-meta">🕐 ${e.time} &nbsp;|&nbsp; ${e.club}</div>
+        <div class="er-meta">${e.time} &nbsp;|&nbsp; ${e.club}</div>
         <div class="er-tags">${(e.skills || []).map(s=>`<span class="tag tag-green">${s}</span>`).join('')}</div>
       </div>
     `).join('');
@@ -1115,7 +1133,7 @@ function renderReview() {
   const reps = getClubReputation();
   document.getElementById('club-reputation-list').innerHTML = reps.map(rep => `
     <div style="background:#fff;border:1px solid #f3f4f6;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;gap:12px">
-      <div style="font-size:26px;flex-shrink:0">🏛️</div>
+      <div style="font-size:26px;flex-shrink:0"></div>
       <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:700;color:#1f2937;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${rep.club}</div>
         <div style="font-size:11px;color:#6b7280">${rep.eventCount} sự kiện · ${rep.reviewCount} đánh giá</div>
@@ -1132,7 +1150,7 @@ function renderReview() {
     <button class="evpill ${selectedReviewEvent === e.id ? 'active' : ''}" onclick="selectReviewEvent(${e.id})">${e.name.length > 32 ? e.name.substring(0,30)+'…' : e.name}</button>
   `).join('');
 
-  renderReview();
+  renderReviewContent();
 }
 
 function selectReviewEvent(id) {
@@ -1156,7 +1174,7 @@ function renderReviewContent() {
         <div style="font-size:11px;color:#9ca3af">do ${ev.club} tổ chức</div>
       </div>
     </div>
-    <div style="font-size:10px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">⭐ Điểm khâu tổ chức (đúng giờ, không gian, âm thanh)</div>
+    <div style="font-size:10px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">Điểm khâu tổ chức (đúng giờ, không gian, âm thanh)</div>
     <div class="score-main">
       <div>
         <div class="big-score">${avgOrg}</div>
@@ -1176,7 +1194,7 @@ function renderReviewContent() {
   `;
 
   document.getElementById('reviews-list').innerHTML = `
-    <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;padding:0 0 6px">💡 Key Takeaways từ người tham gia</div>
+    <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;padding:0 0 6px">Key Takeaways từ người tham gia</div>
     ${evReviews.map(r => `
       <div class="rcard">
         <div class="rc-top">
@@ -1184,7 +1202,7 @@ function renderReviewContent() {
           <span style="font-size:11px;color:#6b7280">Tổ chức: ${starBar(r.orgStars)} ${r.orgStars}★</span>
         </div>
         <div style="background:#fdf0f2;border-left:3px solid #c8102e;border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:8px;font-size:12px;color:#374151;line-height:1.6">
-          <span style="font-size:10px;font-weight:700;color:#9b0c22;display:block;margin-bottom:4px">💡 BÀI HỌC TÂM ĐẮC</span>
+          <span style="font-size:10px;font-weight:700;color:#9b0c22;display:block;margin-bottom:4px">BÀI HỌC TÂM ĐẮC</span>
           ${r.takeaway}
         </div>
         <div class="rc-tags">
@@ -1200,10 +1218,10 @@ function renderReviewContent() {
 //   DRL
 // ══════════════════════════════════════════
 const DRL_DESCS = {
-  '1.1': 'Mục 1.1 — Kết quả học tập & Nghiên cứu khoa học',
-  '3.1': 'Mục 3.1 — Tham gia hoạt động đoàn thể, CLB',
-  '3.2': 'Mục 3.2 — Hoạt động xã hội & Tình nguyện',
-  '0': 'Sự kiện không cộng ĐRL — nhưng vẫn đáng tham gia!'
+  '1.1': 'Mục 1.1 Kết quả học tập & Nghiên cứu khoa học',
+  '3.1': 'Mục 3.1 Tham gia hoạt động đoàn thể, CLB',
+  '3.2': 'Mục 3.2 Hoạt động xã hội & Tình nguyện',
+  '0': 'Sự kiện không cộng ĐRL'
 };
 
 function setDrlMuc(muc, el) {
@@ -1220,14 +1238,14 @@ function renderDRL() {
     .sort((a,b) => daysUntil(a.deadline) - daysUntil(b.deadline));
 
   if (list.length === 0) {
-    document.getElementById('drl-list').innerHTML = `<div class="empty-state"><div class="big">🎯</div><p>Chưa có sự kiện cho mục này.<br>Cập nhật sớm!</p></div>`;
+    document.getElementById('drl-list').innerHTML = `<div class="empty-state"><div class="big"></div><p>Chưa có sự kiện cho mục này.<br>Cập nhật sớm!</p></div>`;
     return;
   }
 
   document.getElementById('drl-list').innerHTML = list.map(e => {
     const days = daysUntil(e.deadline);
     const urgentClass = days <= 3 ? 'deadline-soon' : '';
-    const urgentText  = days < 0 ? 'Đã hết hạn' : days === 0 ? '⚠️ Hết hạn hôm nay!' : days <= 3 ? `⚠️ Còn ${days} ngày` : `Còn ${days} ngày`;
+    const urgentText  = days < 0 ? 'Đã hết hạn' : days === 0 ? 'Hết hạn hôm nay' : `Còn ${days} ngày`;
     return `
       <div class="drl-item" onclick="openModal(${e.id})">
         <div class="drl-item-top">
@@ -1269,28 +1287,28 @@ function openModal(id) {
       ${(e.skills || []).map(s=>`<span class="tag tag-green">${s}</span>`).join('')}
     </div>
     <div class="modal-info">
-      <div class="modal-info-row"><span class="modal-info-icon">📅</span><div><div class="modal-info-label">Thời gian</div><div class="modal-info-val">${formatDate(e.date)}, ${e.time}</div></div></div>
-      <div class="modal-info-row"><span class="modal-info-icon">📍</span><div><div class="modal-info-label">Địa điểm</div><div class="modal-info-val">${e.location || (e.mode === 'Online' ? 'Online' : 'TBA')}</div></div></div>
-      <div class="modal-info-row"><span class="modal-info-icon">🏛️</span><div><div class="modal-info-label">Đơn vị tổ chức</div><div class="modal-info-val">${e.club}</div></div></div>
-      ${canRegister ? `<div class="modal-info-row"><span class="modal-info-icon">⏰</span><div><div class="modal-info-label">Deadline đăng ký</div><div class="modal-info-val ${days <= 3 && days >= 0 ? 'deadline-soon' : ''}">${formatDate(e.deadline)} ${days >= 0 ? '(còn ' + days + ' ngày)' : '(đã qua)'}</div></div></div>` : ''}
-      ${e.rating > 0 ? `<div class="modal-info-row"><span class="modal-info-icon">⭐</span><div><div class="modal-info-label">Đánh giá từ sinh viên</div><div class="modal-info-val">${e.rating}/5 · ${e.reviewCount} review</div></div></div>` : ''}
+      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Thời gian</div><div class="modal-info-val">${formatDate(e.date)}, ${e.time}</div></div></div>
+      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Địa điểm</div><div class="modal-info-val">${e.location || (e.mode === 'Online' ? 'Online' : 'TBA')}</div></div></div>
+      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Đơn vị tổ chức</div><div class="modal-info-val">${e.club}</div></div></div>
+      ${canRegister ? `<div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Deadline đăng ký</div><div class="modal-info-val ${days <= 3 && days >= 0 ? 'deadline-soon' : ''}">${formatDate(e.deadline)} ${days >= 0 ? '(còn ' + days + ' ngày)' : '(đã qua)'}</div></div></div>` : ''}
+      ${e.rating > 0 ? `<div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Đánh giá từ sinh viên</div><div class="modal-info-val">${e.rating}/5 · ${e.reviewCount} review</div></div></div>` : ''}
     </div>
     ${e.desc ? `<div class="modal-desc">${e.desc}</div>` : ''}
     ${reviewsForEvent.length > 0 ? `
-      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">💬 Review từ người đã tham gia</div>
+      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">Review từ người đã tham gia</div>
       ${reviewsForEvent.slice(0,2).map(r=>`
         <div style="background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid #e5e7eb">
           <div style="display:flex;justify-content:space-between;margin-bottom:5px">
             <span style="font-size:11px;font-weight:600;color:#374151">${r.user}</span>
-            <span style="font-size:11px;color:#f59e0b">${'⭐'.repeat(r.orgStars)}</span>
+            <span style="font-size:11px;color:#f59e0b">${''.repeat(r.orgStars)}</span>
           </div>
           <div style="font-size:12px;color:#4b5563;line-height:1.5">${r.takeaway}</div>
         </div>
       `).join('')}
     ` : ''}
     ${canRegister && e.link
-      ? `<button class="modal-btn" onclick="window.open('${e.link}', '_blank')">Đăng ký tham gia →</button>`
-      : `<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:10px;font-size:13px;color:#64748b">${e.status === 'ended' ? '⚫ Sự kiện đã kết thúc' : '🟡 Đã đóng đơn đăng ký'}</div>`
+      ? `<button class="modal-btn" onclick="window.open('${e.link}', '_blank')">Đăng ký tham gia </button>`
+      : `<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:10px;font-size:13px;color:#64748b">${e.status === 'ended' ? 'Sự kiện đã kết thúc' : 'Đã đóng đơn đăng ký'}</div>`
     }
   `;
 
