@@ -678,7 +678,37 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbweeVzriRh1fGILRRM3M1eg
 // ── Biến data (sẽ được điền sau khi load) ──
 let EVENTS  = [];
 let REVIEWS = [];
+// ── 1. Hàm tự động ép link Drive thành link Direct ──
+function convertDriveLink(url) {
+  if (!url) return '';
+  const match = url.match(/\/d\/(.*?)(\/|$)/);
+  if (match && match[1] && url.includes('drive.google.com')) {
+    // Ép sang link dạng lh3 tải siêu nhanh
+    return `https://drive.google.com/uc?export=view&id=${match[1]}`; 
+  }
+  return url;
+}
 
+// ── 2. Hàm set background cho khung chứa ──
+function posterStyle(e) {
+  if (e.poster) {
+    return `background-image: url('${e.poster}'); background-size: cover; background-position: center;`;
+  }
+  return `background: ${e.color || '#fdf0f2'}`;
+}
+
+// ── 3. Hàm tạo thẻ <img> chống lỗi (fallback) ──
+function posterInner(e) {
+  if (e.poster) {
+    const safeColor = (e.color || '#fdf0f2').replace(/'/g, '');
+    const safeEmoji = (e.emoji || '').replace(/'/g, '');
+    return `<img src="${e.poster}"
+      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+      onerror="this.parentElement.style.backgroundImage='none';this.parentElement.style.background='${safeColor}';this.parentElement.innerHTML='<span style=\\'font-size:32px\\'>${safeEmoji}</span>';"
+      alt="">`;
+  }
+  return e.emoji || '';
+}
 // ── Hàm tải data từ Google Sheets ──
 async function loadData() {
   showLoading(true);
@@ -700,6 +730,15 @@ async function loadData() {
     const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
 
     EVENTS = EVENTS.map(e => {
+      // THÊM ĐOẠN NÀY ĐỂ ÉP LINK DRIVE TRƯỚC KHI HIỂN THỊ
+      if (e.poster) {
+        e.poster = convertDriveLink(e.poster);
+      }
+
+      // Nếu ngày sự kiện đã qua -> Đã kết thúc
+      if (e.date < todayStr) {
+        e.status = 'ended';
+      }
       // Nếu ngày sự kiện đã qua -> Đã kết thúc
       if (e.date < todayStr) {
         e.status = 'ended';
@@ -812,8 +851,8 @@ let filtered = homeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.type === hom
 
   document.getElementById('home-events').innerHTML = filtered.map(e => `
     <div class="ecard" onclick="openModal(${e.id})">
-<div class="ecard-img" style="${e.poster ? `background-image: url('${e.poster}')` : `background: ${e.color}`}">
-    ${e.poster ? '' : e.emoji}
+<div class="ecard-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
+    ${posterInner(e)}
 </div>
       <div class="ecard-body">
         <div class="ecard-title">${e.name}</div>
@@ -917,11 +956,9 @@ function renderExplore() {
 
  document.getElementById('explore-list').innerHTML = list.map(e => `
     <div class="event-row" onclick="openModal(${e.id})" style="display: flex; gap: 12px; align-items: stretch;">
-      ${e.poster ? 
-        `<div style="width: 80px; flex-shrink: 0; border-radius: 8px; background-image: url('${e.poster}'); background-size: cover; background-position: center;"></div>` 
-        : 
-        `<div style="width: 80px; flex-shrink: 0; border-radius: 8px; background: ${e.color}; display: flex; align-items: center; justify-content: center; font-size: 24px;">${e.emoji}</div>`
-      }
+    <div style="width: 80px; flex-shrink: 0; border-radius: 8px; position:relative; overflow:hidden; display: flex; align-items: center; justify-content: center; font-size: 24px; ${posterStyle(e)}">
+        ${posterInner(e)}
+      </div>
       <div style="flex: 1; min-width: 0;">
         <div class="er-top">
           <div class="er-title">${e.name}</div>
@@ -1241,8 +1278,8 @@ function openModal(id) {
   const reviewsForEvent = REVIEWS.filter(r => r.eventId === e.id);
   document.getElementById('modal-body').innerHTML = `
     <button class="modal-close" onclick="closeModal()">✕</button>
-   <div class="modal-event-img" style="${e.poster ? `background-image: url('${e.poster}'); background-size: cover; background-position: center;` : `background:${e.color}`}">
-  ${e.poster ? '' : e.emoji}
+<div class="modal-event-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
+    ${posterInner(e)}
 </div>
     <div class="modal-title">${e.name}</div>
     <div class="modal-tags">
