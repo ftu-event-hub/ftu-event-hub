@@ -666,50 +666,88 @@ body {
   </div>
 </div>
 
-<script>
+
+   <script>
 // ══════════════════════════════════════════
-//   DATA — chỉnh sửa tại đây để cập nhật
+//   CẤU HÌNH API
 // ══════════════════════════════════════════
-// ════════════════════════════════════════════════
-//  CẤU HÌNH API — Thay bằng URL Apps Script của bạn
-// ════════════════════════════════════════════════
 const API_URL = 'https://script.google.com/macros/s/AKfycbweeVzriRh1fGILRRM3M1eg5-x1bi_kk-o1aS1ZmB9JV-WrV-HBXT1ZhedQtp0C2cSy9A/exec';
 
-// ── Biến data (sẽ được điền sau khi load) ──
+// ══════════════════════════════════════════
+//   UUID → LABEL MAPPING (fix Tally form)
+//   
+// ══════════════════════════════════════════
+const TYPE_MAP = {
+  '3bb05abc-6500-4a8d-8966-95cf9f53c60f': 'Workshop',
+  '0dcb82c6-ea73-482c-96f7-9051559039c1': 'Webinar',
+  'f1a2b3c4-0001-0001-0001-000000000001': 'Talkshow',
+  'f1a2b3c4-0001-0001-0001-000000000002': 'Cuộc thi',
+  'f1a2b3c4-0001-0001-0001-000000000003': 'Tình nguyện',
+  'f1a2b3c4-0001-0001-0001-000000000004': 'Tuyển thành viên',
+  'f1a2b3c4-0001-0001-0001-000000000005': 'Lễ phát động',
+  'f1a2b3c4-0001-0001-0001-000000000006': 'Tọa đàm',
+  'f1a2b3c4-0001-0001-0001-000000000007': 'Sự kiện thường niên',
+};
+
+const MODE_MAP = {
+  '97695df4-4d69-4a01-904c-f4c80aa8f0d9': 'Online',
+  '9fd0eac3-7f86-46cd-b7cb-cb9bf92dbb0b': 'Offline',
+  'f1a2b3c4-0002-0002-0002-000000000001': 'Hybrid',
+};
+
+const MUCDRL_MAP = {
+  'a45df4dc-3e1d-4193-9ba4-f893d6cd3dc4': '3.1',
+  '459fd61b-b6b9-4144-838b-553d69fef02d': '3.2',
+  'f1a2b3c4-0003-0003-0003-000000000001': '1.1',
+  'f1a2b3c4-0003-0003-0003-000000000002': '0',
+};
+
+
+function mapField(value, mapping) {
+  if (!value) return value;
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (UUID_RE.test(value.trim())) {
+    return mapping[value.trim()] || value; 
+  }
+  return value;
+}
+
+
 let EVENTS  = [];
 let REVIEWS = [];
-// ── 1. Hàm tự động ép link Drive thành link Direct ──
+
+
 function convertDriveLink(url) {
   if (!url) return '';
   const match = url.match(/\/d\/(.*?)(\/|$)/);
   if (match && match[1] && url.includes('drive.google.com')) {
-    // Ép sang link dạng lh3 tải siêu nhanh
-    return `https://drive.google.com/uc?export=view&id=${match[1]}`; 
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
   return url;
 }
 
-// ── 2. Hàm set background cho khung chứa ──
+
 function posterStyle(e) {
-  if (e.poster) {
-    return `background-image: url('${e.poster}'); background-size: cover; background-position: center;`;
+  if (e.POSTER) {
+    return `background-image: url('${e.POSTER}'); background-size: cover; background-position: center;`;
   }
   return `background: ${e.color || '#fdf0f2'}`;
 }
 
-// ── 3. Hàm tạo thẻ <img> chống lỗi (fallback) ──
+
 function posterInner(e) {
-  if (e.poster) {
+  if (e.POSTER) {
     const safeColor = (e.color || '#fdf0f2').replace(/'/g, '');
     const safeEmoji = (e.emoji || '').replace(/'/g, '');
-    return `<img src="${e.poster}"
+    return `<img src="${e.POSTER}"
       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;"
       onerror="this.parentElement.style.backgroundImage='none';this.parentElement.style.background='${safeColor}';this.parentElement.innerHTML='<span style=\\'font-size:32px\\'>${safeEmoji}</span>';"
       alt="">`;
   }
   return e.emoji || '';
 }
-// ── Hàm tải data từ Google Sheets ──
+
+
 async function loadData() {
   showLoading(true);
 
@@ -724,48 +762,45 @@ async function loadData() {
     EVENTS  = await evRes.json();
     REVIEWS = await rvRes.json();
 
-    // === THÊM ĐOẠN LOGIC NÀY VÀO ĐÂY ===
     const t = new Date();
-    // Tạo chuỗi ngày hiện tại chuẩn YYYY-MM-DD để so sánh
     const todayStr = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
 
     EVENTS = EVENTS.map(e => {
-      // THÊM ĐOẠN NÀY ĐỂ ÉP LINK DRIVE TRƯỚC KHI HIỂN THỊ
-      if (e.poster) {
-        e.poster = convertDriveLink(e.poster);
+
+      e.type   = mapField(e.type,   TYPE_MAP);
+      e.mode   = mapField(e.mode,   MODE_MAP);
+      e.mucDRL = mapField(e.mucDRL, MUCDRL_MAP);
+
+   
+      if (e.POSTER) {
+        e.POSTER = convertDriveLink(e.POSTER);
       }
 
-      // Nếu ngày sự kiện đã qua -> Đã kết thúc
       if (e.date < todayStr) {
         e.status = 'ended';
-      }
-      // Nếu ngày sự kiện đã qua -> Đã kết thúc
-      if (e.date < todayStr) {
-        e.status = 'ended';
-      } 
-      // Nếu sự kiện chưa diễn ra nhưng đã qua deadline đăng ký -> Đóng đơn
-      else if (e.deadline < todayStr) {
+      } else if (e.deadline < todayStr) {
         e.status = 'closed';
-      } 
-      // Nếu chưa qua deadline thì mở đơn
-      else {
+      } else {
         e.status = 'open';
       }
+
+      if (!e.mucDRL || e.mucDRL === '') e.mucDRL = '0';
+
       return e;
     });
-// ===================================
+
   } catch (err) {
     console.error('Lỗi load data:', err);
     showLoading(false);
     document.getElementById('loading-overlay').innerHTML = `
       <div style="text-align:center;padding:24px">
-        <div style="font-size:40px;margin-bottom:10px">😔</div>
+        <div style="font-size:40px;margin-bottom:10px"></div>
         <p style="font-size:14px;color:#374151;font-weight:600;margin-bottom:4px">Không thể tải dữ liệu</p>
         <p style="font-size:12px;color:#9ca3af;margin-bottom:16px">Kiểm tra kết nối mạng và thử lại</p>
         <button onclick="reloadData()"
           style="padding:9px 22px;background:#c8102e;color:white;border:none;
                  border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">
-          🔄 Thử lại
+          Thử lại
         </button>
       </div>
     `;
@@ -789,7 +824,6 @@ async function reloadData() {
     renderExplore();
   }
 }
-
 
 // ══════════════════════════════════════════
 //   STATE
@@ -838,40 +872,34 @@ function renderHome() {
   document.getElementById('stat-clubs').textContent = clubs;
   document.getElementById('stat-reviews').textContent = totalReviews;
 
-let filtered = homeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.type === homeFilter);
-
-  // 1. Chỉ lấy những sự kiện CHƯA KẾT THÚC (status khác 'ended')
+  let filtered = homeFilter === 'all' ? EVENTS : EVENTS.filter(e => e.type === homeFilter);
   filtered = filtered.filter(e => e.status !== 'ended');
-
-  // 2. Sắp xếp để sự kiện nào gần nhất thì ngoi lên đầu
   filtered.sort((a, b) => a.date.localeCompare(b.date));
-
-  // 3. Cắt lấy 4 cái đầu tiên để nhét vào giao diện
   filtered = filtered.slice(0, 4);
 
   document.getElementById('home-events').innerHTML = filtered.map(e => `
     <div class="ecard" onclick="openModal(${e.id})">
-<div class="ecard-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
-    ${posterInner(e)}
-</div>
+      <div class="ecard-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
+        ${posterInner(e)}
+      </div>
       <div class="ecard-body">
         <div class="ecard-title">${e.name}</div>
         <div class="ecard-meta">${formatDate(e.date)}</div>
         <div class="ecard-tags">
           ${statusBadge(e.status)}
-          ${e.mucDRL != '0' ? `<span class="tag tag-blue">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : '<span class="tag tag-gray">Không ĐRL</span>'}
-          ${e.skills.slice(0,1).map(s => `<span class="tag tag-green">${s}</span>`).join('')}
+          ${e.mucDRL && e.mucDRL !== '0' ? `<span class="tag tag-blue">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : '<span class="tag tag-gray">Không ĐRL</span>'}
+          ${(e.skills || []).slice(0,1).map(s => `<span class="tag tag-green">${s}</span>`).join('')}
         </div>
-        ${e.rating > 0 ? `<div class="ecard-stars">⭐ ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
+        ${e.rating > 0 ? `<div class="ecard-stars">${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
       </div>
     </div>
   `).join('');
 }
 
 function statusBadge(status) {
-  if (status === 'open')   return '<span class="tag" style="background:#dcfce7;color:#166534">🟢 Đang mở đơn</span>';
-  if (status === 'closed') return '<span class="tag" style="background:#fef9c3;color:#854d0e">🟡 Đã đóng đơn</span>';
-  if (status === 'ended')  return '<span class="tag" style="background:#f1f5f9;color:#64748b">⚫ Đã kết thúc</span>';
+  if (status === 'open')   return '<span class="tag" style="background:#dcfce7;color:#166534">Đang mở đơn</span>';
+  if (status === 'closed') return '<span class="tag" style="background:#fef9c3;color:#854d0e">Đã đóng đơn</span>';
+  if (status === 'ended')  return '<span class="tag" style="background:#f1f5f9;color:#64748b">Đã kết thúc</span>';
   return '';
 }
 
@@ -887,11 +915,9 @@ function initExplore() {
     "Nghiên cứu khoa học", "Phát triển dự án", "Kỹ năng giao tiếp", "Làm việc nhóm",
     "Định hướng nghề nghiệp", "Networking", "Ứng dụng AI thực tế"
   ];
-
   document.getElementById('skill-chips').innerHTML = TOP_15_SKILLS.map(s => `
     <button class="chip" onclick="toggleSkill('${s}',this)">${s}</button>
   `).join('');
-
   document.getElementById('drl-chips').innerHTML = ALL_DRL.map(d => `
     <button class="chip" onclick="toggleDrlChip('${d}',this)">${d}</button>
   `).join('');
@@ -931,49 +957,44 @@ function setSortMode(mode) { sortMode = mode; renderExplore(); }
 function renderExplore() {
   const q = document.getElementById('search-input').value.toLowerCase();
   let list = EVENTS.filter(e => {
-    const matchQ = !q || e.name.toLowerCase().includes(q) || e.club.toLowerCase().includes(q) || e.skills.some(s => s.toLowerCase().includes(q));
+    const matchQ = !q || e.name.toLowerCase().includes(q) || e.club.toLowerCase().includes(q) || (e.skills || []).some(s => s.toLowerCase().includes(q));
     const matchType = typeFilter === 'all' || e.type === typeFilter;
-    const matchSkill = skillFilters.length === 0 || skillFilters.some(s => e.skills.includes(s));
+    const matchSkill = skillFilters.length === 0 || skillFilters.some(s => (e.skills || []).includes(s));
     const matchDRL = drlFilters.length === 0 || drlFilters.some(d => {
-      if (d === 'Không ĐRL') return e.mucDRL == '0';
+      if (d === 'Không ĐRL') return !e.mucDRL || e.mucDRL === '0';
       return 'Mục ' + e.mucDRL === d;
     });
     return matchQ && matchType && matchSkill && matchDRL;
   });
 
   if (sortMode === 'date') list.sort((a,b) => a.date.localeCompare(b.date));
-  else if (sortMode === 'rating') list.sort((a,b) => b.rating - a.rating);
-  else if (sortMode === 'drl') list.sort((a,b) => b.diemDRL - a.diemDRL);
+  else if (sortMode === 'rating') list.sort((a,b) => (b.rating||0) - (a.rating||0));
+  else if (sortMode === 'drl') list.sort((a,b) => (b.diemDRL||0) - (a.diemDRL||0));
 
   document.getElementById('results-count').textContent = list.length + ' sự kiện phù hợp';
 
   if (list.length === 0) {
     document.getElementById('explore-list').innerHTML = `
-      <div class="empty-state"><div class="big">🔍</div><p>Không tìm thấy sự kiện phù hợp.<br>Thử điều chỉnh bộ lọc nhé!</p></div>
+      <div class="empty-state"><div class="big"></div><p>Không tìm thấy sự kiện phù hợp.<br>Thử điều chỉnh bộ lọc nhé!</p></div>
     `;
     return;
   }
 
- document.getElementById('explore-list').innerHTML = list.map(e => `
-    <div class="event-row" onclick="openModal(${e.id})" style="display: flex; gap: 12px; align-items: stretch;">
-    <div style="width: 80px; flex-shrink: 0; border-radius: 8px; position:relative; overflow:hidden; display: flex; align-items: center; justify-content: center; font-size: 24px; ${posterStyle(e)}">
-        ${posterInner(e)}
+  document.getElementById('explore-list').innerHTML = list.map(e => `
+    <div class="event-row" onclick="openModal(${e.id})">
+      <div class="er-top">
+        <div class="er-title">${e.emoji || ''} ${e.name}</div>
+        ${e.mucDRL && e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : ''}
       </div>
-      <div style="flex: 1; min-width: 0;">
-        <div class="er-top">
-          <div class="er-title">${e.name}</div>
-          ${e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL}·${e.diemDRL}đ</span>` : ''}
-        </div>
-        <div class="er-meta">📅 ${formatDate(e.date)} ${e.time} &nbsp;|&nbsp; ${e.club} &nbsp;|&nbsp; ${e.mode === 'Online' ? '🌐 Online' : '📍 ' + e.location}</div>
-        <div class="er-tags">
-          ${statusBadge(e.status)}
-          ${e.skills.map(s => `<span class="tag tag-green">${s}</span>`).join('')}
-          <span class="tag tag-gray">${e.type}</span>
-        </div>
-        ${e.rating > 0 ? `<div class="er-stars">⭐ ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
+      <div class="er-meta">${formatDate(e.date)} ${e.time} &nbsp;|&nbsp; ${e.club} &nbsp;|&nbsp; ${e.mode === 'Online' ? ' Online' : ' ' + (e.location || '')}</div>
+      <div class="er-tags">
+        ${statusBadge(e.status)}
+        ${(e.skills || []).map(s => `<span class="tag tag-green">${s}</span>`).join('')}
+        <span class="tag tag-gray">${e.type || ''}</span>
       </div>
+      ${e.rating > 0 ? `<div class="er-stars"> ${e.rating} · ${e.reviewCount} đánh giá</div>` : ''}
     </div>
-`).join('');
+  `).join('');
 }
 
 // ══════════════════════════════════════════
@@ -984,7 +1005,7 @@ const MONTH_NAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Th�
 function changeMonth(dir) {
   calMonth += dir;
   if (calMonth > 11) { calMonth = 0; calYear++; }
-  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
   selectedCalDay = null;
   renderCalendar();
 }
@@ -994,11 +1015,11 @@ function renderCalendar() {
   document.getElementById('cal-month-label').textContent = MONTH_NAMES[calMonth] + ' ' + calYear;
 
   const firstDay = new Date(calYear, calMonth, 1);
-  let startDow = firstDay.getDay(); // 0=Sun
-  startDow = startDow === 0 ? 6 : startDow - 1; // convert to Mon=0
+  let startDow = firstDay.getDay();
+  startDow = startDow === 0 ? 6 : startDow - 1;
 
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
 
   const eventDays = {};
   EVENTS.forEach(e => {
@@ -1011,64 +1032,50 @@ function renderCalendar() {
   });
 
   let html = '';
-  // prev month days
   for (let i = startDow - 1; i >= 0; i--) {
     html += `<div class="cal-day other-month"><span>${daysInPrev - i}</span></div>`;
   }
-  // current month
   for (let d = 1; d <= daysInMonth; d++) {
-    const isToday = today.getDate() === d && today.getMonth() === calMonth && today.getFullYear() === calYear;
-    const hasEvent = !!eventDays[d];
+    const isToday    = today.getDate() === d && today.getMonth() === calMonth && today.getFullYear() === calYear;
+    const hasEvent   = !!eventDays[d];
     const isSelected = selectedCalDay === d;
     let cls = 'cal-day';
-    if (isToday) cls += ' today';
+    if (isToday)    cls += ' today';
     else if (hasEvent) cls += ' has-event';
     if (isSelected) cls += ' selected';
-   // 1. Tạo chuỗi HTML chứa tên các sự kiện trong ngày
-      let eventsHtml = '';
-      if (hasEvent) {
-        eventsHtml = eventDays[d].map(e => {
-          // Xử lý màu sắc: Nếu là ngày "hôm nay" (nền đỏ) thì chữ trắng, ngược lại chữ đỏ
-          const bgColor = isToday ? 'rgba(255, 255, 255, 0.2)' : 'rgba(200, 16, 46, 0.1)';
-          const txtColor = isToday ? '#ffffff' : '#c8102e';
-          
-          return `<div style="
-            font-size: 9px; font-weight: 600; 
-            background: ${bgColor}; color: ${txtColor}; 
-            padding: 2px 4px; border-radius: 4px; 
-            margin-top: 3px; width: 90%; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
-            text-align: left;
-          ">${e.name}</div>`;
-        }).join('');
-      }
 
-      // 2. Ép style cho ô ngày đẩy chữ lên trên cùng (flex-start)
-      html += `<div class="${cls}" onclick="selectCalDay(${d})" style="justify-content: flex-start; padding-top: 6px;">
-        <span style="margin-bottom: 2px;">${d}</span>
-        ${eventsHtml}
-      </div>`;
+    let eventsHtml = '';
+    if (hasEvent) {
+      eventsHtml = eventDays[d].map(e => {
+        const bgColor  = isToday ? 'rgba(255,255,255,0.2)' : 'rgba(200,16,46,0.1)';
+        const txtColor = isToday ? '#ffffff' : '#c8102e';
+        return `<div style="font-size:9px;font-weight:600;background:${bgColor};color:${txtColor};
+          padding:2px 4px;border-radius:4px;margin-top:3px;width:90%;
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;">${e.name}</div>`;
+      }).join('');
+    }
+
+    html += `<div class="${cls}" onclick="selectCalDay(${d})" style="justify-content:flex-start;padding-top:6px;">
+      <span style="margin-bottom:2px;">${d}</span>
+      ${eventsHtml}
+    </div>`;
   }
-  // next month fill
-  const total = startDow + daysInMonth;
+
+  const total     = startDow + daysInMonth;
   const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
   for (let i = 1; i <= remaining; i++) {
     html += `<div class="cal-day other-month"><span>${i}</span></div>`;
   }
 
   document.getElementById('cal-days').innerHTML = html;
-
   if (selectedCalDay) selectCalDay(selectedCalDay);
 }
 
 function selectCalDay(day) {
   selectedCalDay = day;
-// Lọc sự kiện bằng cách bóc tách từng Năm/Tháng/Ngày để so sánh (Cách này bao chuẩn)
   const dayEvents = EVENTS.filter(e => {
     const d = new Date(e.date);
-    return d.getFullYear() === calYear && 
-           d.getMonth() === calMonth && 
-           d.getDate() === day;
+    return d.getFullYear() === calYear && d.getMonth() === calMonth && d.getDate() === day;
   });
 
   document.getElementById('cal-selected-title').textContent =
@@ -1079,11 +1086,11 @@ function selectCalDay(day) {
     : dayEvents.map(e => `
       <div class="event-row" onclick="openModal(${e.id})" style="margin-bottom:8px">
         <div class="er-top">
-          <div class="er-title">${e.emoji} ${e.name}</div>
-          ${e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL} · ${e.diemDRL}đ</span>` : ''}
+          <div class="er-title">${e.emoji || ''} ${e.name}</div>
+          ${e.mucDRL && e.mucDRL !== '0' ? `<span class="er-drl">Mục ${e.mucDRL} · ${e.diemDRL}đ</span>` : ''}
         </div>
-        <div class="er-meta">🕐 ${e.time} &nbsp;|&nbsp; ${e.club}</div>
-        <div class="er-tags">${e.skills.map(s=>`<span class="tag tag-green">${s}</span>`).join('')}</div>
+        <div class="er-meta">${e.time} &nbsp;|&nbsp; ${e.club}</div>
+        <div class="er-tags">${(e.skills || []).map(s=>`<span class="tag tag-green">${s}</span>`).join('')}</div>
       </div>
     `).join('');
 
@@ -1094,7 +1101,6 @@ function selectCalDay(day) {
 //   REVIEW
 // ══════════════════════════════════════════
 function getClubReputation() {
-  // Group reviews by club, compute avg orgStars per club
   const clubMap = {};
   REVIEWS.forEach(r => {
     const ev = EVENTS.find(e => e.id === r.eventId);
@@ -1127,11 +1133,10 @@ function renderReview() {
   const reviewedEvents = EVENTS.filter(e => REVIEWS.some(r => r.eventId === e.id));
   if (!selectedReviewEvent) selectedReviewEvent = reviewedEvents[0]?.id;
 
-  // Render CLB reputation cards
   const reps = getClubReputation();
   document.getElementById('club-reputation-list').innerHTML = reps.map(rep => `
     <div style="background:#fff;border:1px solid #f3f4f6;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;gap:12px">
-      <div style="font-size:26px;flex-shrink:0">🏛️</div>
+      <div style="font-size:26px;flex-shrink:0"></div>
       <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:700;color:#1f2937;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${rep.club}</div>
         <div style="font-size:11px;color:#6b7280">${rep.eventCount} sự kiện · ${rep.reviewCount} đánh giá</div>
@@ -1144,7 +1149,6 @@ function renderReview() {
     </div>
   `).join('');
 
-  // Render event pills
   document.getElementById('review-event-pills').innerHTML = reviewedEvents.map(e => `
     <button class="evpill ${selectedReviewEvent === e.id ? 'active' : ''}" onclick="selectReviewEvent(${e.id})">${e.name.length > 32 ? e.name.substring(0,30)+'…' : e.name}</button>
   `).join('');
@@ -1167,13 +1171,13 @@ function renderReviewContent() {
 
   document.getElementById('score-card').innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-      <span style="font-size:20px">${ev.emoji}</span>
+      <span style="font-size:20px">${ev.emoji || ''}</span>
       <div>
         <div class="score-title" style="margin:0">${ev.name}</div>
         <div style="font-size:11px;color:#9ca3af">do ${ev.club} tổ chức</div>
       </div>
     </div>
-    <div style="font-size:10px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">⭐ Điểm khâu tổ chức (đúng giờ, không gian, âm thanh)</div>
+    <div style="font-size:10px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px">Điểm khâu tổ chức (đúng giờ, không gian, âm thanh)</div>
     <div class="score-main">
       <div>
         <div class="big-score">${avgOrg}</div>
@@ -1193,7 +1197,7 @@ function renderReviewContent() {
   `;
 
   document.getElementById('reviews-list').innerHTML = `
-    <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;padding:0 0 6px">💡 Key Takeaways từ người tham gia</div>
+    <div style="font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.4px;text-transform:uppercase;padding:0 0 6px">Key Takeaways từ người tham gia</div>
     ${evReviews.map(r => `
       <div class="rcard">
         <div class="rc-top">
@@ -1201,12 +1205,12 @@ function renderReviewContent() {
           <span style="font-size:11px;color:#6b7280">Tổ chức: ${starBar(r.orgStars)} ${r.orgStars}★</span>
         </div>
         <div style="background:#fdf0f2;border-left:3px solid #c8102e;border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:8px;font-size:12px;color:#374151;line-height:1.6">
-          <span style="font-size:10px;font-weight:700;color:#9b0c22;display:block;margin-bottom:4px">💡 BÀI HỌC TÂM ĐẮC</span>
+          <span style="font-size:10px;font-weight:700;color:#9b0c22;display:block;margin-bottom:4px">BÀI HỌC TÂM ĐẮC</span>
           ${r.takeaway}
         </div>
         <div class="rc-tags">
-          ${r.tagsPos.map(t => `<span class="tag tag-green">${t}</span>`).join('')}
-          ${r.tagsNeg.map(t => `<span class="tag tag-red">${t}</span>`).join('')}
+          ${(r.tagsPos || []).map(t => `<span class="tag tag-green">${t}</span>`).join('')}
+          ${(r.tagsNeg || []).map(t => `<span class="tag tag-red">${t}</span>`).join('')}
         </div>
       </div>
     `).join('')}
@@ -1217,10 +1221,10 @@ function renderReviewContent() {
 //   DRL
 // ══════════════════════════════════════════
 const DRL_DESCS = {
-  '1.1': 'Mục 1.1 — Kết quả học tập & Nghiên cứu khoa học',
-  '3.1': 'Mục 3.1 — Tham gia hoạt động đoàn thể, CLB',
-  '3.2': 'Mục 3.2 — Hoạt động xã hội & Tình nguyện',
-  '0': 'Sự kiện không cộng ĐRL — nhưng vẫn đáng tham gia!'
+  '1.1': 'Mục 1.1 Kết quả học tập & Nghiên cứu khoa học',
+  '3.1': 'Mục 3.1 Tham gia hoạt động đoàn thể, CLB',
+  '3.2': 'Mục 3.2 Hoạt động xã hội & Tình nguyện',
+  '0': 'Sự kiện không cộng ĐRL'
 };
 
 function setDrlMuc(muc, el) {
@@ -1233,28 +1237,24 @@ function setDrlMuc(muc, el) {
 function renderDRL() {
   document.getElementById('drl-muc-desc').textContent = DRL_DESCS[currentDrlMuc] || '';
   const list = EVENTS
-    .filter(e => e.mucDRL == currentDrlMuc)
-    .sort((a,b) => {
-      const daysA = daysUntil(a.deadline);
-      const daysB = daysUntil(b.deadline);
-      return daysA - daysB;
-    });
+    .filter(e => String(e.mucDRL) === String(currentDrlMuc))
+    .sort((a,b) => daysUntil(a.deadline) - daysUntil(b.deadline));
 
   if (list.length === 0) {
-    document.getElementById('drl-list').innerHTML = `<div class="empty-state"><div class="big">🎯</div><p>Chưa có sự kiện cho mục này.<br>Cập nhật sớm!</p></div>`;
+    document.getElementById('drl-list').innerHTML = `<div class="empty-state"><div class="big"></div><p>Chưa có sự kiện cho mục này.<br>Cập nhật sớm!</p></div>`;
     return;
   }
 
   document.getElementById('drl-list').innerHTML = list.map(e => {
     const days = daysUntil(e.deadline);
     const urgentClass = days <= 3 ? 'deadline-soon' : '';
-    const urgentText = days < 0 ? 'Đã hết hạn' : days === 0 ? '⚠️ Hết hạn hôm nay!' : days <= 3 ? `⚠️ Còn ${days} ngày` : `Còn ${days} ngày`;
+    const urgentText  = days < 0 ? 'Đã hết hạn' : days === 0 ? 'Hết hạn hôm nay' : `Còn ${days} ngày`;
     return `
       <div class="drl-item" onclick="openModal(${e.id})">
         <div class="drl-item-top">
           <div>
-            ${e.mucDRL !== '0' ? `<div class="drl-muc-badge">MỤC ${e.mucDRL} — ${(DRL_DESCS[e.mucDRL] || '').split('—')[1]?.trim() || ''}</div>` : ''}
-            <div class="drl-item-name">${e.emoji} ${e.name}</div>
+            ${e.mucDRL && e.mucDRL !== '0' ? `<div class="drl-muc-badge">MỤC ${e.mucDRL} — ${(DRL_DESCS[e.mucDRL] || '').split('—')[1]?.trim() || ''}</div>` : ''}
+            <div class="drl-item-name">${e.emoji || ''} ${e.name}</div>
           </div>
           <div class="drl-pts">${e.diemDRL > 0 ? e.diemDRL + 'đ' : '—'}</div>
         </div>
@@ -1276,43 +1276,45 @@ function openModal(id) {
   const days = daysUntil(e.deadline);
   const canRegister = e.status === 'open';
   const reviewsForEvent = REVIEWS.filter(r => r.eventId === e.id);
+
   document.getElementById('modal-body').innerHTML = `
     <button class="modal-close" onclick="closeModal()">✕</button>
-<div class="modal-event-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
-    ${posterInner(e)}
-</div>
+    <div class="modal-event-img" style="position:relative;overflow:hidden;${posterStyle(e)}">
+      ${posterInner(e)}
+    </div>
     <div class="modal-title">${e.name}</div>
     <div class="modal-tags">
       ${statusBadge(e.status)}
-      <span class="tag tag-gray">${e.type}</span>
-      ${e.mucDRL !== '0' ? `<span class="tag tag-blue">Mục ${e.mucDRL} ĐRL · ${e.diemDRL} điểm</span>` : '<span class="tag tag-gray">Không cộng ĐRL</span>'}
-      ${e.skills.map(s=>`<span class="tag tag-green">${s}</span>`).join('')}
+      <span class="tag tag-gray">${e.type || ''}</span>
+      ${e.mucDRL && e.mucDRL !== '0' ? `<span class="tag tag-blue">Mục ${e.mucDRL} ĐRL · ${e.diemDRL} điểm</span>` : '<span class="tag tag-gray">Không cộng ĐRL</span>'}
+      ${(e.skills || []).map(s=>`<span class="tag tag-green">${s}</span>`).join('')}
     </div>
     <div class="modal-info">
-      <div class="modal-info-row"><span class="modal-info-icon">📅</span><div><div class="modal-info-label">Thời gian</div><div class="modal-info-val">${formatDate(e.date)}, ${e.time}</div></div></div>
-      <div class="modal-info-row"><span class="modal-info-icon">📍</span><div><div class="modal-info-label">Địa điểm</div><div class="modal-info-val">${e.location}</div></div></div>
-      <div class="modal-info-row"><span class="modal-info-icon">🏛️</span><div><div class="modal-info-label">Đơn vị tổ chức</div><div class="modal-info-val">${e.club}</div></div></div>
-      ${canRegister ? `<div class="modal-info-row"><span class="modal-info-icon">⏰</span><div><div class="modal-info-label">Deadline đăng ký</div><div class="modal-info-val ${days <= 3 && days >= 0 ? 'deadline-soon' : ''}">${formatDate(e.deadline)} ${days >= 0 ? '(còn ' + days + ' ngày)' : '(đã qua)'}</div></div></div>` : ''}
-      ${e.rating > 0 ? `<div class="modal-info-row"><span class="modal-info-icon">⭐</span><div><div class="modal-info-label">Đánh giá từ sinh viên</div><div class="modal-info-val">${e.rating}/5 · ${e.reviewCount} review</div></div></div>` : ''}
+      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Thời gian</div><div class="modal-info-val">${formatDate(e.date)}, ${e.time}</div></div></div>
+      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Địa điểm</div><div class="modal-info-val">${e.location || (e.mode === 'Online' ? 'Online' : 'TBA')}</div></div></div>
+      <div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Đơn vị tổ chức</div><div class="modal-info-val">${e.club}</div></div></div>
+      ${canRegister ? `<div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Deadline đăng ký</div><div class="modal-info-val ${days <= 3 && days >= 0 ? 'deadline-soon' : ''}">${formatDate(e.deadline)} ${days >= 0 ? '(còn ' + days + ' ngày)' : '(đã qua)'}</div></div></div>` : ''}
+      ${e.rating > 0 ? `<div class="modal-info-row"><span class="modal-info-icon"></span><div><div class="modal-info-label">Đánh giá từ sinh viên</div><div class="modal-info-val">${e.rating}/5 · ${e.reviewCount} review</div></div></div>` : ''}
     </div>
-    <div class="modal-desc">${e.desc}</div>
+    ${e.desc ? `<div class="modal-desc">${e.desc}</div>` : ''}
     ${reviewsForEvent.length > 0 ? `
-      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">💬 Review từ người đã tham gia</div>
+      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">Review từ người đã tham gia</div>
       ${reviewsForEvent.slice(0,2).map(r=>`
         <div style="background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid #e5e7eb">
           <div style="display:flex;justify-content:space-between;margin-bottom:5px">
             <span style="font-size:11px;font-weight:600;color:#374151">${r.user}</span>
-            <span style="font-size:11px;color:#f59e0b">${'⭐'.repeat(r.orgStars)}</span>
+            <span style="font-size:11px;color:#f59e0b">${''.repeat(r.orgStars)}</span>
           </div>
           <div style="font-size:12px;color:#4b5563;line-height:1.5">${r.takeaway}</div>
         </div>
       `).join('')}
     ` : ''}
-    ${canRegister
-     ? `<button class="modal-btn" onclick="window.open('${e.link}', '_blank')">Đăng ký tham gia →</button>`
-      : `<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:10px;font-size:13px;color:#64748b">${e.status === 'ended' ? '⚫ Sự kiện đã kết thúc' : '🟡 Đã đóng đơn đăng ký'}</div>`
+    ${canRegister && e.link
+      ? `<button class="modal-btn" onclick="window.open('${e.link}', '_blank')">Đăng ký tham gia </button>`
+      : `<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:10px;font-size:13px;color:#64748b">${e.status === 'ended' ? 'Sự kiện đã kết thúc' : 'Đã đóng đơn đăng ký'}</div>`
     }
   `;
+
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1327,12 +1329,14 @@ function closeModal(e) {
 //   UTILS
 // ══════════════════════════════════════════
 function formatDate(str) {
+  if (!str) return '';
   const d = new Date(str);
   return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 }
 
 function daysUntil(str) {
-  const today = new Date(); today.setHours(0,0,0,0);
+  if (!str) return -999;
+  const today  = new Date(); today.setHours(0,0,0,0);
   const target = new Date(str); target.setHours(0,0,0,0);
   return Math.round((target - today) / 86400000);
 }
@@ -1342,7 +1346,7 @@ function daysUntil(str) {
 // ══════════════════════════════════════════
 (async function init() {
   const today = new Date();
-  calYear = today.getFullYear();
+  calYear  = today.getFullYear();
   calMonth = today.getMonth();
 
   const ok = await loadData();
@@ -1352,7 +1356,6 @@ function daysUntil(str) {
     renderExplore();
   }
 })();
-
 </script>
 </body>
 </html>
