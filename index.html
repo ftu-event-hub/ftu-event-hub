@@ -108,6 +108,21 @@ body {
   font-size: 26px; line-height: 1.2; margin-bottom: 8px;
   font-weight: 700;
 }
+  .hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.hero-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.hero-title-row h1 { margin-bottom: 0; }
 .hero p { font-size: 13px; opacity: .85; line-height: 1.5; margin-bottom: 18px; }
 .hero-filters { display: flex; gap: 8px; flex-wrap: wrap; }
 .hpill {
@@ -190,15 +205,13 @@ body {
 
 /* ── CTA ── */
 .cta-box {
-  margin: 0 16px; background: var(--amber-light);
-  border: 1px solid #fde68a; border-radius: var(--radius);
+  margin: 0 16px; background: var(--green-light);
+  border: 1px solid var(--green-mid); border-radius: var(--radius);
   padding: 14px 16px; display: flex; align-items: center; gap: 12px;
   cursor: pointer;
 }
-.cta-box-text { font-size: 12px; font-weight: 600; color: #78350f; flex: 1; }
-.cta-box-sub { font-size: 11px; color: #92400e; font-weight: 400; }
-.cta-arrow { font-size: 18px; }
-
+.cta-box-text { font-size: 12px; font-weight: 600; color: var(--green-dark); flex: 1; }
+.cta-box-sub { font-size: 11px; color: var(--green); font-weight: 400; }
 /* ── EXPLORE PAGE ── */
 .explore-top {
   background: var(--white); padding: 16px 16px 0;
@@ -468,7 +481,10 @@ body {
 ">🔄 Làm mới</button>
 
         <div class="hero-tag">🎓 FTU Event Hub</div>
-        <h1>Sự kiện ngoại khóa FTU</h1>
+        <div class="hero-title-row">
+  <img src="data:image/png;base64,REPLACE_WITH_BASE64" alt="FTU" class="hero-logo">
+  <h1>Sự kiện ngoại khóa FTU</h1>
+</div>
         <p>Tổng hợp toàn bộ hoạt động ngoại khóa — lọc theo ĐRL, kỹ năng và định hướng của bạn</p>
         <div class="hero-filters">
           <button class="hpill active" onclick="filterHome('all',this)">Tất cả</button>
